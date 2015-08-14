@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ktlab.ml.minorfourth.util.FileHelper;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class NERServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -15,7 +15,7 @@ import edu.ktlab.bionlp.cdr.dataset.MESHSearcher;
 import edu.ktlab.bionlp.cdr.nlp.wsim.CosineWordSimilarity;
 import edu.ktlab.bionlp.cdr.nlp.wsim.PhraseSimilarity;
 import edu.ktlab.bionlp.cdr.nlp.wsim.WeightCosinePhraseSimilarity;
-import edu.ktlab.ml.minorfourth.util.FileHelper;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class CDRMentionNormalization {
 	static String inFile = "data/cdr/cdr_dev/cdr_dev.gzip";
@@ -24,12 +24,12 @@ public class CDRMentionNormalization {
 	public static void main(String[] args) throws Exception {
 		if (outFile.exists())
 			outFile.delete();
-		
+
 		System.out.print("MESH 2015 loading...");
 		MESHSearcher searcher = new MESHSearcher();
 		searcher.loadMESH("data/mesh2015.txt");
 		System.out.println("done.");
-		
+
 		PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new CosineWordSimilarity(), true);
 		// PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new
 		// W2VWordSimilarity("data/embedding/glove.txt"), false);
@@ -51,7 +51,7 @@ public class CDRMentionNormalization {
 				if (StringUtils.isAlphanumeric(token))
 					query += token + " ";
 
-			Map<String, String> results = searcher.searchMESH(query.trim(), 11);			
+			Map<String, String> results = searcher.searchMESH(query.trim(), 11);
 			for (String mesh : results.keySet()) {
 				float score = sim.score(tokens, SimpleTokenizer.INSTANCE.tokenize(mesh.toLowerCase()));
 				if (score > max) {

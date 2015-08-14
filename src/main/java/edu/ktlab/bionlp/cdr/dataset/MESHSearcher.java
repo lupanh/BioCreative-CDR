@@ -26,8 +26,7 @@ import org.apache.lucene.search.similarities.DefaultSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
-import edu.ktlab.bionlp.cdr.util.PorterStemmer;
-import edu.ktlab.ml.minorfourth.util.FileHelper;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class MESHSearcher {
 	private Directory ramDirectory;

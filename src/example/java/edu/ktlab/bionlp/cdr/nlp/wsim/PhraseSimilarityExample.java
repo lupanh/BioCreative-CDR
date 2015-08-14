@@ -16,7 +16,7 @@ import edu.ktlab.bionlp.cdr.nlp.wsim.CosineWordSimilarity;
 import edu.ktlab.bionlp.cdr.nlp.wsim.PhraseSimilarity;
 import edu.ktlab.bionlp.cdr.nlp.wsim.W2VWordSimilarity;
 import edu.ktlab.bionlp.cdr.nlp.wsim.WeightCosinePhraseSimilarity;
-import edu.ktlab.ml.minorfourth.util.FileHelper;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class PhraseSimilarityExample {
 
@@ -30,10 +30,11 @@ public class PhraseSimilarityExample {
 					.toLowerCase()));
 			meshs.add(p);
 		}
-		
+
 		System.out.println("done. " + meshs.size());
-		
-		// PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new W2VWordSimilarity("data/embedding/glove.txt"));
+
+		// PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new
+		// W2VWordSimilarity("data/embedding/glove.txt"));
 		PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new CosineWordSimilarity(), true);
 		String concept1 = "withdrawal-emergent rs";
 		String[] tokens1 = SimpleTokenizer.INSTANCE.tokenize(concept1.toLowerCase());

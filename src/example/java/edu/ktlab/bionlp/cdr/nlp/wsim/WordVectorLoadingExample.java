@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 import edu.ktlab.bionlp.cdr.nlp.wsim.distance.Distance;
 import edu.ktlab.bionlp.cdr.nlp.wsim.distance.EuclideanDistance;
-import edu.ktlab.ml.minorfourth.util.FileHelper;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class WordVectorLoadingExample {
 
