@@ -17,7 +17,7 @@ import com.google.common.io.Resources;
 import edu.ktlab.bionlp.cdr.nlp.ner.features.JeniaFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.ner.features.NgramTokenFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.ner.features.WordLengthFeatureGenerator;
-import edu.ktlab.bionlp.cdr.nlp.tools.jeniatagger.Jenia;
+import edu.ktlab.bionlp.cdr.nlp.utils.jeniatagger.Jenia;
 
 public class MaxentNERFactoryExample1 {
 

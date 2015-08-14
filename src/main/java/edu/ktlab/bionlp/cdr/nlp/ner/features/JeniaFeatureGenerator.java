@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jmcejuela.bio.jenia.common.Sentence;
 
-import edu.ktlab.bionlp.cdr.nlp.tools.jeniatagger.Jenia;
+import edu.ktlab.bionlp.cdr.nlp.utils.jeniatagger.Jenia;
 import opennlp.tools.util.featuregen.FeatureGeneratorAdapter;
 
 public class JeniaFeatureGenerator extends FeatureGeneratorAdapter {
