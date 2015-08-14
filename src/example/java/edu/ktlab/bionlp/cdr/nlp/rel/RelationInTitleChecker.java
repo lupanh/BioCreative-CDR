@@ -1,0 +1,55 @@
+package edu.ktlab.bionlp.cdr.nlp.rel;
+
+import edu.ktlab.bionlp.cdr.data.Annotation;
+import edu.ktlab.bionlp.cdr.data.Collection;
+import edu.ktlab.bionlp.cdr.data.CollectionFactory;
+import edu.ktlab.bionlp.cdr.data.Document;
+import edu.ktlab.bionlp.cdr.data.Relation;
+import edu.ktlab.bionlp.cdr.data.Sentence;
+
+public class RelationInTitleChecker {
+	public static void main(String... strings) {
+		// Collection col = CollectionLoader.loadFromFile("data/cdr/cdr_dev/cdr_dev.txt", false);
+		Collection col = CollectionFactory.loadFile("data/cdr/cdr_train/cdr_train.txt", false);
+		
+		for (Document doc : col.getDocuments()) {
+			System.out.println(doc.getPmid());
+			boolean containChed = false;
+			boolean containDis = false;
+			
+			for (Sentence sent : doc.getPassages().get(0).getSentences())
+				for (Annotation ann : sent.getAnnotations()) {
+					if (ann.getType().equals("Chemical")) {
+						containChed = true;
+					}
+						
+					if (ann.getType().equals("Disease")) {
+						containDis = true;
+					}						
+				}
+			
+			if (containChed && containDis) {
+				System.out.print("contain Both");
+				
+				for (Relation relCandidate : doc.getPassages().get(0).getRelationCandidates()) {
+					if (doc.getRelations().contains(relCandidate)) {
+						System.out.print("\tcontain CID");
+						break;
+					}						
+				}
+				System.out.println();
+				
+				continue;
+			}
+				
+			
+			if (containChed)
+				System.out.println("contain Ched");
+			if (containDis)
+				System.out.println("contain Dis");
+		}
+
+		
+	}
+
+}
