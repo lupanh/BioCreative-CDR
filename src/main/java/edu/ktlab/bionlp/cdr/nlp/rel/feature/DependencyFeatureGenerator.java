@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import edu.ktlab.bionlp.cdr.data.Sentence;
-import edu.ktlab.bionlp.cdr.data.Token;
+import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.base.Token;
 import edu.ktlab.bionlp.cdr.util.DependencyHelper;
 import edu.ktlab.bionlp.cdr.util.StringHelper;
 import edu.stanford.nlp.ling.IndexedWord;

@@ -2,12 +2,12 @@ package edu.ktlab.bionlp.cdr.nlp.rel;
 
 import java.util.List;
 
-import edu.ktlab.bionlp.cdr.data.Annotation;
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
-import edu.ktlab.bionlp.cdr.data.Document;
-import edu.ktlab.bionlp.cdr.data.Relation;
-import edu.ktlab.bionlp.cdr.data.Sentence;
+import edu.ktlab.bionlp.cdr.base.Annotation;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Relation;
+import edu.ktlab.bionlp.cdr.base.Sentence;
 
 public class RelationInSentenceChecker {
 	public static void main(String... strings) {

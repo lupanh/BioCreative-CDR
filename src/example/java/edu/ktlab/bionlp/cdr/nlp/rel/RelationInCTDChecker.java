@@ -4,10 +4,10 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
-import edu.ktlab.bionlp.cdr.data.Document;
-import edu.ktlab.bionlp.cdr.data.Relation;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class RelationInCTDChecker {

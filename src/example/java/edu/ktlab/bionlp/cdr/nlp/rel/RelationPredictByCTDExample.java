@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import jersey.repackaged.com.google.common.collect.Maps;
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
-import edu.ktlab.bionlp.cdr.data.Document;
-import edu.ktlab.bionlp.cdr.data.Relation;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class RelationPredictByCTDExample {

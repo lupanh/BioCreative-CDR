@@ -10,8 +10,8 @@ import java.util.Set;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class CTDPubmedFetcher {
@@ -40,7 +40,7 @@ public class CTDPubmedFetcher {
 		*/
 		Collection col = CollectionFactory.loadFile("data/cdr/cdr_full/CDR_FullSet.txt", false);
 
-		for (edu.ktlab.bionlp.cdr.data.Document doc : col.getDocuments()) {
+		for (edu.ktlab.bionlp.cdr.base.Document doc : col.getDocuments()) {
 			String url = "http://ctdbase.org/detail.go?6578706f7274=1&d-1332398-e=3&view=disease&type=reference&acc="
 					+ doc.getPmid();
 			Document docHtml = Jsoup.connect(url).timeout(30000).get();

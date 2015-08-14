@@ -2,8 +2,8 @@ package edu.ktlab.bionlp.cdr.nlp.rel.feature;
 
 import java.util.ArrayList;
 
-import edu.ktlab.bionlp.cdr.data.Sentence;
-import edu.ktlab.bionlp.cdr.data.Token;
+import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.base.Token;
 import edu.ktlab.bionlp.cdr.util.DependencyHelper;
 import edu.ktlab.bionlp.cdr.util.StringHelper;
 import edu.stanford.nlp.ling.IndexedWord;

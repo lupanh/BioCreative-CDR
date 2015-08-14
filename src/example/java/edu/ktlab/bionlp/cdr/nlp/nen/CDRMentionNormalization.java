@@ -8,9 +8,9 @@ import opennlp.tools.tokenize.SimpleTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 
-import edu.ktlab.bionlp.cdr.data.Annotation;
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Annotation;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.dataset.MESHSearcher;
 import edu.ktlab.bionlp.cdr.nlp.wsim.CosineWordSimilarity;
 import edu.ktlab.bionlp.cdr.nlp.wsim.PhraseSimilarity;

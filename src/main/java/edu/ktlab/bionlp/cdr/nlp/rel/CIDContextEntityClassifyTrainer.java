@@ -11,12 +11,12 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import de.bwaldvogel.liblinear.Train;
-import edu.ktlab.bionlp.cdr.data.Annotation;
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
-import edu.ktlab.bionlp.cdr.data.Document;
-import edu.ktlab.bionlp.cdr.data.Sentence;
-import edu.ktlab.bionlp.cdr.data.Token;
+import edu.ktlab.bionlp.cdr.base.Annotation;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.base.Token;
 import edu.ktlab.bionlp.cdr.nlp.rel.feature.ContextGenerator;
 import edu.ktlab.bionlp.cdr.nlp.rel.feature.DependencyFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.rel.feature.FeatureGenerator;

@@ -4,9 +4,9 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import edu.ktlab.bionlp.cdr.data.Collection;
-import edu.ktlab.bionlp.cdr.data.CollectionFactory;
-import edu.ktlab.bionlp.cdr.data.Relation;
+import edu.ktlab.bionlp.cdr.base.Collection;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Relation;
 
 public class RelationOverlapChecker {
 	public static void main(String... strings) {
