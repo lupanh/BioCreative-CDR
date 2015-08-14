@@ -17,7 +17,7 @@ import opennlp.tools.util.Span;
 import opennlp.tools.util.TrainingParameters;
 import opennlp.tools.util.eval.FMeasure;
 import opennlp.tools.util.featuregen.AdaptiveFeatureGenerator;
-import edu.ktlab.bionlp.cdr.nlp.data.TextSpan;
+import edu.ktlab.bionlp.cdr.base.TextSpan;
 
 public class MaxentNERFactory {
 	AdaptiveFeatureGenerator featureGenerator;

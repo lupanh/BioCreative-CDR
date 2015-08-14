@@ -3,7 +3,7 @@ package edu.ktlab.bionlp.cdr.nlp.ner;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import edu.ktlab.bionlp.cdr.nlp.data.TextSpan;
+import edu.ktlab.bionlp.cdr.base.TextSpan;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.util.Span;

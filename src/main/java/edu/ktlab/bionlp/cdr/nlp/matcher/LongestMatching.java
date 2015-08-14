@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.ktlab.bionlp.cdr.nlp.data.TextSpan;
+import edu.ktlab.bionlp.cdr.base.TextSpan;
 
 public class LongestMatching {
 	Map<String, String> dictionary = new HashMap<String, String>();
