@@ -1,18 +1,34 @@
 package edu.ktlab.bionlp.cdr.nlp.ner;
 
+import java.io.File;
+import java.nio.charset.Charset;
+
 import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class PerceptronNERRecognizerExample {
 	public static void main(String[] args) throws Exception {
-		String text = "000|t|Tricuspid valve regurgitation and lithium carbonate toxicity in a newborn infant.\n000|a|A newborn with massive tricuspid regurgitation, atrial flutter, congestive heart failure, and a high serum lithium level is described. This is the first patient to initially manifest tricuspid regurgitation and atrial flutter, and the 11th described patient with cardiac disease among infants exposed to lithium compounds in the first trimester of pregnancy. Sixty-three percent of these infants had tricuspid valve involvement. Lithium carbonate may be a factor in the increasing incidence of congenital heart disease when taken during early pregnancy. It also causes neurologic depression, cyanosis, and cardiac arrhythmia when consumed prior to delivery.";
-		Document doc = CollectionFactory.loadDocumentFromString(text, false);
-
-		MaxentNERRecognizer nerFinder = new MaxentNERRecognizer("models/ner/cdr_full.perc.model", MaxentNERFactoryExample.createFeatureGenerator());		
-		for (Sentence sent : doc.getSentences()) {			
-			String output = nerFinder.recognize(doc.getPmid(), sent);
-			System.out.print(output);
+		MaxentNERRecognizer nerFinder = new MaxentNERRecognizer("models/ner/cdr_full.perc.model",
+				MaxentNERFactoryExample.createFeatureGenerator());
+		
+		String[] lines = FileHelper.readFileAsLines("temp/test_webservice.txt");
+		String text = "";
+		for (int i = 0; i < lines.length; i++) {
+			text += lines[i] + "\n";
+			if (i % 2 == 1) {
+				Document doc = CollectionFactory.loadDocumentFromString(text, false);				
+				for (Sentence sent : doc.getSentences()) {
+					String tagged = nerFinder.recognize(doc.getPmid(), sent);
+					text += tagged;
+				}
+				
+				FileHelper.appendToFile(text, new File("temp/test_outservice.txt"), Charset.defaultCharset());
+				
+				text = "";
+			}
 		}
+
 	}
 }

@@ -45,7 +45,7 @@ public class MaxentNERRecognizer {
 					endOffset = sentence.getTokens().get(i).getEndBaseOffset();
 				entity += sentence.getTokens().get(i).getContent() + " ";
 			}
-			output += id + "\t" + startOffset + "\t" + endOffset + "\t" + entity.trim() + "\t" + span.getType() + "\n";
+			output += id + "\t" + startOffset + "\t" + endOffset + "\t" + entity.trim() + "\t" + span.getType() + "\tD002216" + "\n";
 		}
 		return output;
 	}
