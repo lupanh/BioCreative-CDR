@@ -133,11 +133,10 @@ public class NERServlet extends HttpServlet {
 		FileHelper.appendToFile(data, new File("temp/data_services.txt"), Charset.forName("UTF-8"));
 		Document doc = CollectionFactory.loadDocumentFromString(data, false);
 
-		String output = "";
 		for (Sentence sent : doc.getSentences()) {
 			String tagged = nerFinder.recognize(doc.getPmid(), sent);
-			output += tagged;
+			data += tagged;
 		}
-		return output;
+		return data;
 	}
 }
