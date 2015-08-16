@@ -3,6 +3,7 @@ package edu.ktlab.bionlp.cdr.base;
 public class Token {
 	private int id;
 	private String content;
+	private String longForm;
 	private int startBaseOffset;
 	private int endBaseOffset;
 	private int startTokenizedOffset;
@@ -76,10 +77,18 @@ public class Token {
 		this.content = content;
 	}
 
+	public String getLongForm() {
+		return longForm;
+	}
+
+	public void setLongForm(String longForm) {
+		this.longForm = longForm;
+	}
+
 	@Override
 	public String toString() {
-		return "Token [id=" + id + ", content=" + content + ", startBaseOffset=" + startBaseOffset + ", endBaseOffset="
-				+ endBaseOffset + ", startTokenizedOffset=" + startTokenizedOffset + ", endTokenizedOffset="
-				+ endTokenizedOffset + "]";
+		return "Token [id=" + id + ", content=" + content + ", longForm=" + longForm + ", startBaseOffset="
+				+ startBaseOffset + ", endBaseOffset=" + endBaseOffset + ", startTokenizedOffset="
+				+ startTokenizedOffset + ", endTokenizedOffset=" + endTokenizedOffset + "]";
 	}
 }

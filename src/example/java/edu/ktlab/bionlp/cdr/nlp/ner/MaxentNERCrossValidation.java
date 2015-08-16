@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNEREvaluator;
-import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactory;
+import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERFactory;
 import edu.ktlab.bionlp.cdr.nlp.ner.MicroFMeasure;
 import opennlp.model.TrainUtil;
 import opennlp.tools.namefind.NameFinderME;
@@ -29,7 +29,7 @@ public class MaxentNERCrossValidation {
 	static int beamsize = 5;
 
 	public static void main(String[] args) throws Exception {
-		MaxentNERFactory ner = new MaxentNERFactory(
+		CDRNERFactory ner = new CDRNERFactory(
 				MaxentNERFactoryExample.createFeatureGenerator());
 
 		InputStream in = new FileInputStream(inputData);

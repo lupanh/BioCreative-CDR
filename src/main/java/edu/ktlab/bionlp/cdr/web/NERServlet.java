@@ -15,19 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactoryExample;
-import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERRecognizer;
+import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERRecognizer;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class NERServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	MaxentNERRecognizer nerFinder;
+	CDRNERRecognizer nerFinder;
 	File temp = new File("temp/data_services.txt");
-	
+	MentionNormalization normalizer;
+
 	public NERServlet() {
 		try {
-			nerFinder = new MaxentNERRecognizer("models/ner/cdr_full.perc.model",
+			nerFinder = new CDRNERRecognizer("models/ner/cdr_full.perc.model",
 					MaxentNERFactoryExample.createFeatureGenerator());
+			normalizer = new MentionNormalization("data/cdr/cdr_full/cdr_full.txt", "models/nen/mesh2015.gzip");
 			if (temp.exists())
 				temp.delete();
 		} catch (Exception e) {
@@ -133,10 +136,10 @@ public class NERServlet extends HttpServlet {
 		Document doc = CollectionFactory.loadDocumentFromString(data, false);
 
 		for (Sentence sent : doc.getSentences()) {
-			String tagged = nerFinder.recognize(doc, sent);
+			String tagged = nerFinder.recognize(doc, sent, normalizer);
 			data += tagged;
 		}
-		FileHelper.appendToFile(data + "\n", temp, Charset.forName("UTF-8"));		
+		FileHelper.appendToFile(data + "\n", temp, Charset.forName("UTF-8"));
 		return data;
 	}
 }

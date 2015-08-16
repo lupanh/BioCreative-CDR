@@ -3,7 +3,7 @@ package edu.ktlab.bionlp.cdr.nlp.ner;
 import java.io.File;
 import java.nio.charset.Charset;
 
-import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERRecognizer;
+import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERRecognizer;
 import edu.ktlab.bionlp.cdr.nlp.tokenizer.TokenizerMESingleton;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
@@ -11,7 +11,7 @@ public class MaxentNERRecognizerFileExample {
 	static String file = "eventAnnnotation.txt";
 
 	public static void main(String[] args) throws Exception {
-		MaxentNERRecognizer nerFinder = new MaxentNERRecognizer("models/ner/htmldata.model",
+		CDRNERRecognizer nerFinder = new CDRNERRecognizer("models/ner/htmldata.model",
 				MaxentNERFactoryExample.createFeatureGenerator());
 		String[] sents = FileHelper.readFileAsLines(file);
 		String output = "";

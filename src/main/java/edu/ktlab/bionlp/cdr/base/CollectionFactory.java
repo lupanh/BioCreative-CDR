@@ -50,7 +50,7 @@ public class CollectionFactory {
 		writer.close();
 	}
 
-	public static Collection loadFile(String file, boolean isParser) {		
+	public static Collection loadFile(String file, boolean isParser) {
 		if (isParser)
 			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
 
@@ -122,11 +122,11 @@ public class CollectionFactory {
 	public static Document loadDocumentFromString(String text, boolean isParser) {
 		if (isParser)
 			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
-		
+
 		Document doc = new Document();
 		int offset = 0;
 		String[] lines = text.split("\n");
-		
+
 		for (String line : lines) {
 			String[] strs = line.split("\\|");
 			if (strs.length == 3 && strs[1].matches("t|a")) {
@@ -178,8 +178,8 @@ public class CollectionFactory {
 					}
 				}
 			}
-		}		
-		
+		}
+
 		return doc;
 	}
 }

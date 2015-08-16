@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 public class FileHelper {
 	public static final class NullWriter extends Writer {
@@ -149,8 +150,7 @@ public class FileHelper {
 	 * @note use {@link #getBufferedFileReader(File, Charset)} for more explicit
 	 *       behavior
 	 * */
-	public static BufferedReader getBufferedFileReader(String filename)
-			throws FileNotFoundException {
+	public static BufferedReader getBufferedFileReader(String filename) throws FileNotFoundException {
 		if (filename == null)
 			throw new NullPointerException();
 		return getBufferedFileReader(new File(filename), Charset.defaultCharset());
@@ -159,8 +159,7 @@ public class FileHelper {
 	/**
 	 * @throws FileNotFoundException
 	 */
-	public static BufferedReader getBufferedFileReader(File file, Charset cs)
-			throws FileNotFoundException {
+	public static BufferedReader getBufferedFileReader(File file, Charset cs) throws FileNotFoundException {
 		if (file == null)
 			throw new NullPointerException();
 		return getBufferedInputStreamReader(new FileInputStream(file), cs);
@@ -181,23 +180,21 @@ public class FileHelper {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 * */
-	public static BufferedWriter getBufferedFileWriter(String filename)
-			throws UnsupportedEncodingException, FileNotFoundException {
+	public static BufferedWriter getBufferedFileWriter(String filename) throws UnsupportedEncodingException,
+			FileNotFoundException {
 		return getBufferedFileWriter(new File(filename), Charset.defaultCharset());
 	}
 
 	/**
 	 * @throws FileNotFoundException
 	 * */
-	public static BufferedWriter getBufferedFileWriter(File file, Charset cs)
-			throws FileNotFoundException {
+	public static BufferedWriter getBufferedFileWriter(File file, Charset cs) throws FileNotFoundException {
 		if (file == null)
 			throw new NullPointerException();
 		return getBufferedOutputStreamWriter(new FileOutputStream(file), cs);
 	}
 
-	public static BufferedWriter getBufferedFileAppend(File file, Charset cs)
-			throws FileNotFoundException {
+	public static BufferedWriter getBufferedFileAppend(File file, Charset cs) throws FileNotFoundException {
 		if (file == null)
 			throw new NullPointerException();
 		return getBufferedOutputStreamWriter(new FileOutputStream(file, true), cs);
@@ -221,8 +218,7 @@ public class FileHelper {
 	 * @author illes
 	 * @throws IOException
 	 */
-	public static void concatenateFiles(File file1, File file2, File outfile, Charset charset)
-			throws IOException {
+	public static void concatenateFiles(File file1, File file2, File outfile, Charset charset) throws IOException {
 		if (charset == null)
 			charset = Charset.defaultCharset();
 
@@ -232,8 +228,7 @@ public class FileHelper {
 		pw.close();
 	}
 
-	public static void concatenateFiles(String file1, String file2, String outfile, Charset charset)
-			throws IOException {
+	public static void concatenateFiles(String file1, String file2, String outfile, Charset charset) throws IOException {
 		concatenateFiles(new File(file1), new File(file2), new File(outfile), charset);
 	}
 
@@ -286,8 +281,11 @@ public class FileHelper {
 	public static String[] readFileAsLines(File file, Charset charset) {
 		List<String> content = new LinkedList<String>();
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-					charset.name()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset.name()));
+			if (file.getName().endsWith(".gzip"))
+				in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file)),
+						charset.name()));
+
 			String line;
 			while ((line = in.readLine()) != null)
 				content.add(line);
@@ -297,24 +295,15 @@ public class FileHelper {
 			ioe.printStackTrace();
 			return null;
 		}
-		// String[] result = new String[content.size()];
-		// for (int i = 0; i < content.size(); i++) {
-		// result[i] = (String)content.get(i);
-		// }
-		// content.clear();
-		// content = null;
-		// return result;
 		return content.toArray(new String[0]);
 	}
 
 	/**
 	 * @throws IOException
 	 */
-	public static Set<String> readFileIntoSet(String filename, boolean toLowerCase)
-			throws IOException {
+	public static Set<String> readFileIntoSet(String filename, boolean toLowerCase) throws IOException {
 		Set<String> s = new HashSet<String>();
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename),
-				"UTF-8"));
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
 		String line;
 		while ((line = in.readLine()) != null)
 			if (toLowerCase)
@@ -333,8 +322,7 @@ public class FileHelper {
 			boolean plusFirstCharacterUpperCaseVariant) {
 		Set<String> s = new HashSet<String>();
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(
-					filename), "UTF-8"));
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (line.length() > 0 && !line.startsWith("#")) {
@@ -369,8 +357,7 @@ public class FileHelper {
 	public static String[] readFromFile(File file) {
 		List<String> content = new LinkedList<String>();
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-					"UTF-8"));
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 			String line;
 			while ((line = in.readLine()) != null)
 				content.add(line);
@@ -570,8 +557,7 @@ public class FileHelper {
 	 * @param expression
 	 * @return String[]
 	 */
-	public static String[] getFilenamesFromDirectory(String dirname, boolean recursively,
-			String expression) {
+	public static String[] getFilenamesFromDirectory(String dirname, boolean recursively, String expression) {
 		String storeFilter = getFilefilterExpression();
 		setFilefilterExpression(expression);
 		String[] ret = getFilenamesFromDirectory(dirname, recursively);
@@ -708,8 +694,7 @@ public class FileHelper {
 			}
 
 		} catch (IOException e) {
-			throw new RuntimeException("Error while trying to read file: "
-					+ file.getCanonicalPath(), e);
+			throw new RuntimeException("Error while trying to read file: " + file.getCanonicalPath(), e);
 		} finally {
 			if (fis != null)
 				fis.close();

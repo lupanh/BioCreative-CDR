@@ -2,6 +2,7 @@ package edu.ktlab.bionlp.cdr.nlp.nen;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 
 import opennlp.tools.tokenize.SimpleTokenizer;
@@ -18,7 +19,8 @@ import edu.ktlab.bionlp.cdr.nlp.wsim.WeightCosinePhraseSimilarity;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class CDRMentionNormalization {
-	static String inFile = "data/cdr/cdr_dev/cdr_dev.gzip";
+	static String trainFile = "data/cdr/cdr_train/cdr_train.txt";
+	static String testFile = "data/cdr/cdr_dev/cdr_dev.txt";
 	static File outFile = new File("temp/norm.dev.cos.txt");
 
 	public static void main(String[] args) throws Exception {
@@ -33,34 +35,49 @@ public class CDRMentionNormalization {
 		PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new CosineWordSimilarity(), true);
 		// PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new
 		// W2VWordSimilarity("data/embedding/glove.txt"), false);
-
-		Collection col = CollectionFactory.loadJsonFile(inFile);
-		for (Annotation ann : col.getAnnotations()) {
-			String[] tokens = ann.getStrTokens(true);
-
-			float max = 0.01f;
+		Collection colTrain = CollectionFactory.loadFile(trainFile, false);		
+		Collection colTest = CollectionFactory.loadFile(testFile, false);
+		
+		Map<String, String> memoryLinked = new HashMap<String, String>();
+		for (Annotation ann : colTrain.getAnnotations()) {
+			memoryLinked.put(ann.getContent().toLowerCase(), ann.getReference());
+		}
+		
+		for (Annotation ann : colTest.getAnnotations()) {
 			String predict = "-1";
-			String info = "";
-			if (tokens.length == 0) {
-				System.err.println(ann.getReference());
-				continue;
-			}
-
 			String query = "";
-			for (String token : tokens)
-				if (StringUtils.isAlphanumeric(token))
-					query += token + " ";
+			String info = "";
 
-			Map<String, String> results = searcher.searchMESH(query.trim(), 11);
-			for (String mesh : results.keySet()) {
-				float score = sim.score(tokens, SimpleTokenizer.INSTANCE.tokenize(mesh.toLowerCase()));
-				if (score > max) {
-					max = score;
-					predict = results.get(mesh);
-					info = score + "\t" + mesh;
+			if (memoryLinked.containsKey(ann.getContent().toLowerCase())) {
+				predict = memoryLinked.get(ann.getContent().toLowerCase());
+				query = ann.getContent().toLowerCase();
+				info = ann.getContent().toLowerCase();
+			} else {
+				
+				String[] tokens = ann.getStrTokens(true);
+				
+				float max = 0.01f;
+				if (tokens.length == 0) {
+					System.err.println(ann.getReference());
+					continue;
 				}
-			}
 
+				for (String token : tokens)
+					if (StringUtils.isAlphanumeric(token))
+						query += token + " ";
+
+				Map<String, String> results = searcher.searchMESH(query.trim(), 11);
+				for (String mesh : results.keySet()) {
+					float score = sim.score(tokens, SimpleTokenizer.INSTANCE.tokenize(mesh.toLowerCase()));
+					if (score > max) {
+						max = score;
+						predict = results.get(mesh);
+						info = score + "\t" + mesh;
+					}
+				}	
+			}
+				
+			
 			String output = query + "\t" + ann.getReference() + "\t" + predict + "\t"
 					+ (ann.getReference().contains(predict) + "\t" + info);
 			FileHelper.appendToFile(output + "\n", outFile, Charset.forName("UTF-8"));

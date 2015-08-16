@@ -7,12 +7,15 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 
+import edu.ktlab.bionlp.cdr.util.ExtractAbbreviation;
+import edu.ktlab.bionlp.cdr.util.ExtractAbbreviation.AbbreviationPair;
+
 public class Document {
 	private String pmid;
-	private String content;
 	private List<Passage> passages;
 	private List<Annotation> annotations;
 	private List<Relation> relations;
+	private ExtractAbbreviation extractAbbrev = new ExtractAbbreviation();
 
 	public Document() {
 		passages = new ArrayList<Passage>();
@@ -77,9 +80,9 @@ public class Document {
 			text += pass.getContent() + "\n";
 		return text.substring(0, text.length() - 1);
 	}
-
-	public void setContent(String content) {
-		this.content = content;
+	
+	public Set<AbbreviationPair> getAbbreviations() {
+		return extractAbbrev.extractAbbrPairs(getContent());
 	}
 
 	public List<Sentence> getSentences() {
