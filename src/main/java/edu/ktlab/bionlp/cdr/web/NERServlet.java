@@ -22,11 +22,14 @@ import edu.ktlab.bionlp.cdr.util.FileHelper;
 public class NERServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	MaxentNERRecognizer nerFinder;
-
+	File temp = new File("temp/data_services.txt");
+	
 	public NERServlet() {
 		try {
 			nerFinder = new MaxentNERRecognizer("models/ner/cdr_full.perc.model",
 					MaxentNERFactoryExample.createFeatureGenerator());
+			if (temp.exists())
+				temp.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,10 +130,7 @@ public class NERServlet extends HttpServlet {
 	}
 
 	private String annotate(String data, int run) throws Exception {
-		File temp = new File("temp/data_services.txt");
-		if (temp.exists())
-			temp.delete();
-		FileHelper.appendToFile(data, new File("temp/data_services.txt"), Charset.forName("UTF-8"));
+		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		Document doc = CollectionFactory.loadDocumentFromString(data, false);
 
 		for (Sentence sent : doc.getSentences()) {
