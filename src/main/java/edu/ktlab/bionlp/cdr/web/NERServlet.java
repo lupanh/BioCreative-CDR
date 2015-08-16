@@ -130,13 +130,13 @@ public class NERServlet extends HttpServlet {
 	}
 
 	private String annotate(String data, int run) throws Exception {
-		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		Document doc = CollectionFactory.loadDocumentFromString(data, false);
 
 		for (Sentence sent : doc.getSentences()) {
 			String tagged = nerFinder.recognize(doc.getPmid(), sent);
 			data += tagged;
 		}
+		FileHelper.appendToFile(data + "\n", temp, Charset.forName("UTF-8"));		
 		return data;
 	}
 }
