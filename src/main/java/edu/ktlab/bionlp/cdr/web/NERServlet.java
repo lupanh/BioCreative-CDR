@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.ktlab.bionlp.cdr.base.Annotation;
 import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
@@ -136,10 +138,12 @@ public class NERServlet extends HttpServlet {
 		Document doc = CollectionFactory.loadDocumentFromString(data, false);
 
 		for (Sentence sent : doc.getSentences()) {
-			String tagged = nerFinder.recognize(doc, sent, normalizer);
-			data += tagged;
+			List<Annotation> anns = nerFinder.recognize(doc, sent, normalizer);
+			for (Annotation ann : anns)
+				data += doc.getPmid() + "\t" + ann.getStartBaseOffset() + "\t" + ann.getEndBaseOffset() + "\t"
+						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
 		}
-		FileHelper.appendToFile(data + "\n", temp, Charset.forName("UTF-8"));
+		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
 	}
 }

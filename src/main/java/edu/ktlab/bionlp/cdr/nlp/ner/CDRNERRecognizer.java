@@ -2,7 +2,10 @@ package edu.ktlab.bionlp.cdr.nlp.ner;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.ktlab.bionlp.cdr.base.Annotation;
 import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.base.TextSpan;
@@ -33,31 +36,44 @@ public class CDRNERRecognizer {
 		nerFinder = new NameFinderME(nerModel, featureGenerator, beamSize);
 	}
 
-	public String recognize(Document doc, Sentence sentence, MentionNormalization normalizer) {
+	public List<Annotation> recognize(Document doc, Sentence sentence, MentionNormalization normalizer) {
+		List<Annotation> anns = new ArrayList<Annotation>();
 		String output = "";
 		String[] sentenceTokens = sentence.getStringTokens();
 		Span[] spans = nerFinder.find(sentenceTokens);
+
 		for (Span span : spans) {
+			Annotation ann = new Annotation();
+			
 			int startOffset = Integer.MAX_VALUE;
 			int endOffset = 0;
 			for (int i = span.getStart(); i < span.getEnd(); i++) {
+				ann.addToken(sentence.getTokens().get(i));
 				if (sentence.getTokens().get(i).getStartBaseOffset() <= startOffset)
 					startOffset = sentence.getTokens().get(i).getStartBaseOffset();
 				if (sentence.getTokens().get(i).getEndBaseOffset() >= endOffset)
 					endOffset = sentence.getTokens().get(i).getEndBaseOffset();
 			}
 			
-			String mention = doc.getContent().substring(startOffset, endOffset);
-			output += doc.getPmid() + "\t" + startOffset + "\t" + endOffset + "\t" + mention.trim() + "\t" + span.getType();
+			String mention = doc.getContent().substring(startOffset, endOffset);			
+			
+			ann.setContent(mention);
+			ann.setStartBaseOffset(startOffset);
+			ann.setEndBaseOffset(endOffset);
+			ann.setType(span.getType());
+			
+			// output += doc.getPmid() + "\t" + startOffset + "\t" + endOffset + "\t" + mention.trim() + "\t" + span.getType();
 			
 			String[] mentionTokens = SimpleTokenizer.INSTANCE.tokenize(mention.toLowerCase());
 			if (normalizer != null) {
 				String meshId = normalizer.normalize(mention, mentionTokens);
-				output += "\t" + meshId;
+				// output += "\t" + meshId;
+				ann.setReference(meshId);
 			}
-			output += "\n";
+			// output += "\n";
+			anns.add(ann);
 		}
-		return output;
+		return anns;
 	}
 
 	public String recognize(String[] tokens) {
