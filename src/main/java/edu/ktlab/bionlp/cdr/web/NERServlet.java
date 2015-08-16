@@ -30,7 +30,7 @@ public class NERServlet extends HttpServlet {
 		try {
 			nerFinder = new CDRNERRecognizer("models/ner/cdr_full.perc.model",
 					MaxentNERFactoryExample.createFeatureGenerator());
-			normalizer = new MentionNormalization("data/cdr/cdr_full/cdr_full.txt", "models/nen/mesh2015.gzip");
+			normalizer = new MentionNormalization("data/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
 			if (temp.exists())
 				temp.delete();
 		} catch (Exception e) {
