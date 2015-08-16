@@ -26,8 +26,8 @@ public class MaxentNERFactory {
 		this.featureGenerator = featureGenerator;
 	}
 
-	public TokenNameFinderModel trainNER(InputStream trainStream, String algorithm, int iterator,
-			int cutoff) throws Exception {
+	public TokenNameFinderModel trainNER(InputStream trainStream, String algorithm, int iterator, int cutoff)
+			throws Exception {
 		Charset charset = Charset.forName("UTF-8");
 		ObjectStream<String> lineStream = new PlainTextByLineStream(trainStream, charset);
 
@@ -49,10 +49,9 @@ public class MaxentNERFactory {
 		return model;
 	}
 
-	public void trainNER(String trainingPath, String modelFilePath, String algorithm, int iterator,
-			int cutoff) throws Exception {
-		TokenNameFinderModel model = trainNER(new FileInputStream(trainingPath), algorithm,
-				iterator, cutoff);
+	public void trainNER(String trainingPath, String modelFilePath, String algorithm, int iterator, int cutoff)
+			throws Exception {
+		TokenNameFinderModel model = trainNER(new FileInputStream(trainingPath), algorithm, iterator, cutoff);
 
 		BufferedOutputStream modelOut = null;
 		try {
@@ -68,11 +67,9 @@ public class MaxentNERFactory {
 	public void evaluatebyExactMatching(String testPath, String modelPath, int beamsize) throws Exception {
 		InputStream modelIn = new FileInputStream(modelPath);
 		TokenNameFinderModel nerModel = new TokenNameFinderModel(modelIn);
-		MaxentNEREvaluator evaluator = new MaxentNEREvaluator(new NameFinderME(nerModel,
-				featureGenerator, beamsize));
+		MaxentNEREvaluator evaluator = new MaxentNEREvaluator(new NameFinderME(nerModel, featureGenerator, beamsize));
 		Charset charset = Charset.forName("UTF-8");
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new FileInputStream(testPath),
-				charset);
+		ObjectStream<String> lineStream = new PlainTextByLineStream(new FileInputStream(testPath), charset);
 		ObjectStream<NameSample> testStream = new NameSampleDataStream(lineStream);
 		evaluator.evaluate(testStream);
 		MicroFMeasure result = evaluator.getFMeasure();
@@ -83,8 +80,7 @@ public class MaxentNERFactory {
 		InputStream modelIn = new FileInputStream(modelPath);
 		TokenNameFinderModel nerModel = new TokenNameFinderModel(modelIn);
 		Charset charset = Charset.forName("UTF-8");
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new FileInputStream(testPath),
-				charset);
+		ObjectStream<String> lineStream = new PlainTextByLineStream(new FileInputStream(testPath), charset);
 		ObjectStream<NameSample> testStream = new NameSampleDataStream(lineStream);
 		NameSample sample;
 		NameFinderME finder = new NameFinderME(nerModel, featureGenerator, 3);
@@ -94,16 +90,13 @@ public class MaxentNERFactory {
 		}
 	}
 
-	public void nFoldEvaluate(String trainingPath, int numFolds, int iterator, int cutoff)
-			throws Exception {
+	public void nFoldEvaluate(String trainingPath, int numFolds, int iterator, int cutoff) throws Exception {
 		FileInputStream sampleDataIn = new FileInputStream(trainingPath);
 		Charset charset = Charset.forName("UTF-8");
-		ObjectStream<String> lineStream = new PlainTextByLineStream(sampleDataIn.getChannel(),
-				charset);
+		ObjectStream<String> lineStream = new PlainTextByLineStream(sampleDataIn.getChannel(), charset);
 		ObjectStream<NameSample> sampleStream = new NameSampleDataStream(lineStream);
 
-		MaxentNERCrossValidator evaluator = new MaxentNERCrossValidator("en", cutoff, iterator,
-				featureGenerator);
+		MaxentNERCrossValidator evaluator = new MaxentNERCrossValidator("en", cutoff, iterator, featureGenerator);
 
 		evaluator.evaluate(sampleStream, numFolds);
 		FMeasure result = evaluator.getFMeasure();

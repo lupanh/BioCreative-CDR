@@ -46,13 +46,12 @@ public class MESHSearcher {
 
 		for (String line : lines) {
 			String[] fields = StringUtils.split(line, "\t");
-			Document doc = new Document();			
+			Document doc = new Document();
 			doc.add(new StringField("id", fields[0], Field.Store.YES));
-			
-			String[] tokens = SimpleTokenizer.INSTANCE.tokenize(fields[1]);				
-			doc.add(new TextField("name", StringUtils.join(tokens, " "),
-					Field.Store.YES));
-			
+
+			String[] tokens = SimpleTokenizer.INSTANCE.tokenize(fields[1]);
+			doc.add(new TextField("name", StringUtils.join(tokens, " "), Field.Store.YES));
+
 			indexWriter.addDocument(doc);
 		}
 		indexWriter.close();

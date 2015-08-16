@@ -8,11 +8,11 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 
 public class Document {
-	String pmid;
-	String content;
-	List<Passage> passages;
-	List<Annotation> annotations;
-	List<Relation> relations;
+	private String pmid;
+	private String content;
+	private List<Passage> passages;
+	private List<Annotation> annotations;
+	private List<Relation> relations;
 
 	public Document() {
 		passages = new ArrayList<Passage>();

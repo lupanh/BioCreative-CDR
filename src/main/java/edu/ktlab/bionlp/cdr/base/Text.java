@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Text {
-	String content;
-	String[] tokens;
-	boolean isTokenize;
-	List<TextAnnotation> annotations = new ArrayList<TextAnnotation>();
+	private String content;
+	private String[] tokens;
+	private boolean isTokenize;
+	private List<TextAnnotation> annotations = new ArrayList<TextAnnotation>();
 
 	public Text(String content) {
 		this.content = content;

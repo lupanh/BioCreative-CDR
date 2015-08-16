@@ -12,7 +12,7 @@ public class MaxentNERRecognizerFileExample {
 
 	public static void main(String[] args) throws Exception {
 		MaxentNERRecognizer nerFinder = new MaxentNERRecognizer("models/ner/htmldata.model",
-				MaxentNERFactoryExample1.createFeatureGenerator());
+				MaxentNERFactoryExample.createFeatureGenerator());
 		String[] sents = FileHelper.readFileAsLines(file);
 		String output = "";
 		for (String sent : sents) {

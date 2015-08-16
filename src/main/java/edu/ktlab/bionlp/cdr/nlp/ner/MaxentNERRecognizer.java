@@ -3,6 +3,7 @@ package edu.ktlab.bionlp.cdr.nlp.ner;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.base.TextSpan;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -12,10 +13,9 @@ import opennlp.tools.util.featuregen.AdaptiveFeatureGenerator;
 public class MaxentNERRecognizer {
 	AdaptiveFeatureGenerator featureGenerator;
 	NameFinderME nerFinder;
-	int beamSize = 3;
+	int beamSize = 5;
 
-	public MaxentNERRecognizer(String modelPath, AdaptiveFeatureGenerator featureGenerator)
-			throws Exception {
+	public MaxentNERRecognizer(String modelPath, AdaptiveFeatureGenerator featureGenerator) throws Exception {
 		this.featureGenerator = featureGenerator;
 		loadNERModel(modelPath);
 	}
@@ -28,6 +28,26 @@ public class MaxentNERRecognizer {
 	void loadNERModel(InputStream model) throws Exception {
 		TokenNameFinderModel nerModel = new TokenNameFinderModel(model);
 		nerFinder = new NameFinderME(nerModel, featureGenerator, beamSize);
+	}
+
+	public String recognize(String id, Sentence sentence) {
+		String output = "";
+		String[] tokens = sentence.getStringTokens();
+		Span[] spans = nerFinder.find(tokens);
+		for (Span span : spans) {
+			int startOffset = Integer.MAX_VALUE;
+			int endOffset = 0;
+			String entity = "";
+			for (int i = span.getStart(); i < span.getEnd(); i++) {
+				if (sentence.getTokens().get(i).getStartBaseOffset() <= startOffset)
+					startOffset = sentence.getTokens().get(i).getStartBaseOffset();
+				if (sentence.getTokens().get(i).getEndBaseOffset() >= endOffset)
+					endOffset = sentence.getTokens().get(i).getEndBaseOffset();
+				entity += sentence.getTokens().get(i).getContent() + " ";
+			}
+			output += id + "\t" + startOffset + "\t" + endOffset + "\t" + entity.trim() + "\n";
+		}
+		return output;
 	}
 
 	public String recognize(String[] tokens) {

@@ -11,18 +11,14 @@ import opennlp.tools.util.featuregen.SuffixFeatureGenerator;
 import opennlp.tools.util.featuregen.TokenClassFeatureGenerator;
 import opennlp.tools.util.featuregen.TokenFeatureGenerator;
 import opennlp.tools.util.featuregen.WindowFeatureGenerator;
-
-import com.google.common.io.Resources;
-
 import edu.ktlab.bionlp.cdr.nlp.ner.features.JeniaFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.ner.features.NgramTokenFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.ner.features.WordLengthFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.utils.jeniatagger.Jenia;
 
-public class MaxentNERFactoryExample1 {
-
+public class MaxentNERFactoryExample {
 	public static AdaptiveFeatureGenerator createFeatureGenerator() throws Exception {
-		Jenia.setModelsPath(Resources.getResource("models/genia").getFile());
+		Jenia.setModelsPath("models/genia");
 		AdaptiveFeatureGenerator featureGenerator = new CachedFeatureGenerator(new AdaptiveFeatureGenerator[] {
 				new WindowFeatureGenerator(new TokenClassFeatureGenerator(true), 2, 2),
 				new WindowFeatureGenerator(new TokenFeatureGenerator(true), 2, 2),
@@ -36,8 +32,8 @@ public class MaxentNERFactoryExample1 {
 
 	public static void main(String[] args) throws Exception {
 		MaxentNERFactory ner = new MaxentNERFactory(createFeatureGenerator());
-		ner.trainNER("data/cdr/cdr_training/CDR_TrainingSet.opennlp", "models/ner/cdr_train.mebs.model",
-				TrainUtil.PERCEPTRON_VALUE, 100, 1);
-		ner.evaluatebyExactMatching("data/cdr/cdr_dev/CDR_DevelopmentSet.opennlp", "models/ner/cdr_train.mebs.model", 5);
+		//ner.trainNER("data/cdr/cdr_train/cdr_train.opennlp", "models/ner/cdr_train.perc.model", TrainUtil.PERCEPTRON_VALUE, 100, 1);
+		ner.trainNER("data/cdr/cdr_full/cdr_full.opennlp", "models/ner/cdr_full.perc.model", TrainUtil.PERCEPTRON_VALUE, 100, 1);
+		ner.evaluatebyExactMatching("data/cdr/cdr_dev/cdr_dev.opennlp", "models/ner/cdr_full.perc.model", 5);
 	}
 }

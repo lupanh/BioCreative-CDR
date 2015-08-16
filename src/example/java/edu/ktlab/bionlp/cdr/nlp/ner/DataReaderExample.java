@@ -9,7 +9,7 @@ import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
 public class DataReaderExample {
-	static String trainingPath = "data/cdr/cdr_dev/CDR_DevelopmentSet.opennlp";
+	static String trainingPath = "data/cdr/cdr_dev/cdr_dev.opennlp";
 
 	public static void main(String[] args) throws Exception {
 		int sumEntities = 0;

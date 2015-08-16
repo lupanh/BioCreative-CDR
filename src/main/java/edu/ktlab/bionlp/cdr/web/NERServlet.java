@@ -12,10 +12,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactoryExample;
+import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERRecognizer;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class NERServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	MaxentNERRecognizer nerFinder;
+
+	public NERServlet() {
+		try {
+			nerFinder = new MaxentNERRecognizer("models/ner/cdr_full.perc.model",
+					MaxentNERFactoryExample.createFeatureGenerator());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -112,7 +127,17 @@ public class NERServlet extends HttpServlet {
 	}
 
 	private String annotate(String data, int run) throws Exception {
+		File temp = new File("temp/data_services.txt");
+		if (temp.exists())
+			temp.delete();
 		FileHelper.appendToFile(data, new File("temp/data_services.txt"), Charset.forName("UTF-8"));
-		return data;
+		Document doc = CollectionFactory.loadDocumentFromString(data, false);
+
+		String output = "";
+		for (Sentence sent : doc.getSentences()) {
+			String tagged = nerFinder.recognize(doc.getPmid(), sent);
+			output += tagged;
+		}
+		return output;
 	}
 }

@@ -1,12 +1,12 @@
 package edu.ktlab.bionlp.cdr.base;
 
 public class Token {
-	int id;
-	String content;
-	int startBaseOffset;
-	int endBaseOffset;
-	int startTokenizedOffset;
-	int endTokenizedOffset;
+	private int id;
+	private String content;
+	private int startBaseOffset;
+	private int endBaseOffset;
+	private int startTokenizedOffset;
+	private int endTokenizedOffset;
 
 	public Token() {
 	}

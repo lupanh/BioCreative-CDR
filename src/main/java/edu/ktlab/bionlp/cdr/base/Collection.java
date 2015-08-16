@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class Collection {
-	Map<String, Document> documents;
+	private Map<String, Document> documents;
 
 	public Collection() {
 		documents = Maps.newHashMap();

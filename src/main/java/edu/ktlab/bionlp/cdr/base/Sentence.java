@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class Sentence {
-	int startOffset;
-	int endOffset;
-	String content;
-	List<Annotation> annotations;
-	List<Token> tokens;
-	String deptree;
+	private int startOffset;
+	private int endOffset;
+	private String content;
+	private List<Annotation> annotations;
+	private List<Token> tokens;
+	private String deptree;
 
 	public Sentence() {
 		annotations = new ArrayList<Annotation>();
@@ -65,6 +65,15 @@ public class Sentence {
 
 	public List<Token> getTokens() {
 		return tokens;
+	}
+	
+	public String[] getStringTokens() {
+		String[] strTokens = new String[tokens.size()];
+		
+		for (int i = 0; i < tokens.size(); i++)
+			strTokens[i] = tokens.get(i).getContent();
+		
+		return strTokens;
 	}
 
 	public void setTokens(List<Token> tokens) {

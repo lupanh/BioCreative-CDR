@@ -7,13 +7,13 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 
 public class Passage {
-	int startOffset;
-	int endOffset;
-	String type;
-	String content;
-	List<Sentence> sentences;
-	List<Annotation> annotations;
-	List<Relation> relations;
+	private int startOffset;
+	private int endOffset;
+	private String type;
+	private String content;
+	private List<Sentence> sentences;
+	private List<Annotation> annotations;
+	private List<Relation> relations;
 
 	public Passage() {
 		sentences = Lists.newArrayList();

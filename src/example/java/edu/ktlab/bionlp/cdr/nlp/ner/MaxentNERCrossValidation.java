@@ -23,14 +23,14 @@ import opennlp.tools.util.PlainTextByLineStream;
 public class MaxentNERCrossValidation {
 	static int numFolds = 10;
 	static String encoding = "UTF-8";
-	static String inputData = "data/cdr/cdr_training/CDR_TrainingSet.opennlp";
+	static String inputData = "data/cdr/cdr_full/cdr_full.opennlp";
 	static int numIterator = 100;
 	static int cutoff = 1;
 	static int beamsize = 5;
 
 	public static void main(String[] args) throws Exception {
 		MaxentNERFactory ner = new MaxentNERFactory(
-				MaxentNERFactoryExample1.createFeatureGenerator());
+				MaxentNERFactoryExample.createFeatureGenerator());
 
 		InputStream in = new FileInputStream(inputData);
 
@@ -69,10 +69,11 @@ public class MaxentNERCrossValidation {
 			InputStream is;
 			// Training
 			is = new ByteArrayInputStream(train.toString().getBytes());
-			TokenNameFinderModel model = ner.trainNER(is, TrainUtil.PERCEPTRON_VALUE, numIterator,
-					cutoff);
+			//TokenNameFinderModel model = ner.trainNER(is, TrainUtil.PERCEPTRON_VALUE, numIterator, cutoff);
+			TokenNameFinderModel model = ner.trainNER(is, TrainUtil.MAXENT_VALUE, numIterator, cutoff);
+			
 			MaxentNEREvaluator evaluator = new MaxentNEREvaluator(new NameFinderME(model,
-					MaxentNERFactoryExample1.createFeatureGenerator(), beamsize));
+					MaxentNERFactoryExample.createFeatureGenerator(), beamsize));
 
 			// Testing
 			is = new ByteArrayInputStream(test.toString().getBytes());

@@ -1,13 +1,13 @@
 package edu.ktlab.bionlp.cdr.base;
 
 public class TextAnnotation {
-	String text;
-	int fromToken;
-	int toToken;
-	int fromOffset;
-	int toOffset;
-	String type;
-	String source;
+	private String text;
+	private int fromToken;
+	private int toToken;
+	private int fromOffset;
+	private int toOffset;
+	private String type;
+	private String source;
 
 	public TextAnnotation(String text, int fromToken, int toToken, int fromOffset, int toOffset,
 			String type, String source) {

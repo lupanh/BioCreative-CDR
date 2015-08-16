@@ -17,7 +17,7 @@ public class CDRLoaderExample {
 
 		// Collection col = CollectionFactory.loadFile("data/cdr/cdr_test.txt");
 		col = CollectionFactory.loadJsonFile("data/cdr/cdr_train/cdr_train.gzip");
-		System.out.println(col.documents.size());
+		System.out.println(col.getDocuments().size());
 	}
 
 }

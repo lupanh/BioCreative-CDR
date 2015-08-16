@@ -24,6 +24,9 @@ import edu.stanford.nlp.trees.Tree;
 
 public class CollectionFactory {
 	static Gson gson = new Gson();
+	static SentSplitterMESingleton splitter = SentSplitterMESingleton.getInstance();
+	static SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
+	static LexicalizedParser parser = null;
 
 	public static Collection loadJsonFile(String file) throws Exception {
 		JsonReader reader;
@@ -47,10 +50,7 @@ public class CollectionFactory {
 		writer.close();
 	}
 
-	public static Collection loadFile(String file, boolean isParser) {
-		SentSplitterMESingleton splitter = SentSplitterMESingleton.getInstance();
-		SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
-		LexicalizedParser parser = null;
+	public static Collection loadFile(String file, boolean isParser) {		
 		if (isParser)
 			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
 
@@ -86,9 +86,9 @@ public class CollectionFactory {
 						String[] tokens = tokenizer.tokenize(content);
 						if (isParser) {
 							Tree tree = parser.parseStrings(DependencyHelper.transform(tokens));
-							sent.setDeptree(tree.toString());	
+							sent.setDeptree(tree.toString());
 						}
-						
+
 						sent.setTokens(tokens);
 						passage.addSentence(sent);
 					}
@@ -117,5 +117,69 @@ public class CollectionFactory {
 			}
 		}
 		return collection;
+	}
+
+	public static Document loadDocumentFromString(String text, boolean isParser) {
+		if (isParser)
+			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
+		
+		Document doc = new Document();
+		int offset = 0;
+		String[] lines = text.split("\n");
+		
+		for (String line : lines) {
+			String[] strs = line.split("\\|");
+			if (strs.length == 3 && strs[1].matches("t|a")) {
+				doc.setPmid(strs[0]);
+				Passage passage = new Passage();
+				if (strs[1].equals("t")) {
+					passage.setType("title");
+				} else {
+					passage.setType("abstract");
+				}
+				passage.setStartOffset(offset);
+				passage.setEndOffset(offset + strs[2].length());
+				passage.setContent(strs[2]);
+				Span[] sentSpans = splitter.senPosSplit(strs[2]);
+				for (Span span : sentSpans) {
+					Sentence sent = new Sentence();
+					sent.setStartOffset(passage.getStartOffset() + span.getStart());
+					sent.setEndOffset(passage.getStartOffset() + span.getEnd());
+					String content = strs[2].substring(span.getStart(), span.getEnd());
+					sent.setContent(content);
+					String[] tokens = tokenizer.tokenize(content);
+					if (isParser) {
+						Tree tree = parser.parseStrings(DependencyHelper.transform(tokens));
+						sent.setDeptree(tree.toString());
+					}
+
+					sent.setTokens(tokens);
+					passage.addSentence(sent);
+				}
+				doc.addPassage(passage);
+				offset = strs[2].length() + 1;
+			} else {
+				strs = line.split("\t");
+				if (strs.length > 3) {
+					if (strs[1].equals("CID")) {
+						Relation rel = new Relation();
+						rel.setId("CID");
+						rel.setChemicalID(strs[2]);
+						rel.setDiseaseID(strs[3]);
+						doc.addRelation(rel);
+					} else {
+						Annotation ann = new Annotation();
+						ann.setStartBaseOffset(Integer.parseInt(strs[1]));
+						ann.setEndBaseOffset(Integer.parseInt(strs[2]));
+						ann.setContent(strs[3]);
+						ann.setType(strs[4]);
+						ann.setReference(strs[5]);
+						doc.addAnnotation(ann);
+					}
+				}
+			}
+		}		
+		
+		return doc;
 	}
 }

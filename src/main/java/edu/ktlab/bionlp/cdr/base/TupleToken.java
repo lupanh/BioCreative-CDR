@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TupleToken {
-	String[] tokens;
-	Map<String, TextSpan[]> annotation = new HashMap<String, TextSpan[]>();
+	private String[] tokens;
+	private Map<String, TextSpan[]> annotation = new HashMap<String, TextSpan[]>();
 
 	public TupleToken(String[] tokens) {
 		this.tokens = tokens;
