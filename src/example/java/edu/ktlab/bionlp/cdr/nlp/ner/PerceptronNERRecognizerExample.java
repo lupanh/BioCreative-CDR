@@ -20,7 +20,7 @@ public class PerceptronNERRecognizerExample {
 			if (i % 2 == 1) {
 				Document doc = CollectionFactory.loadDocumentFromString(text, false);				
 				for (Sentence sent : doc.getSentences()) {
-					String tagged = nerFinder.recognize(doc.getPmid(), sent);
+					String tagged = nerFinder.recognize(doc, sent);
 					text += tagged;
 				}
 				

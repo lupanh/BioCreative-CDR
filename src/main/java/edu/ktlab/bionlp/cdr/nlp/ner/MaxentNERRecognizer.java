@@ -3,6 +3,7 @@ package edu.ktlab.bionlp.cdr.nlp.ner;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.base.TextSpan;
 import opennlp.tools.namefind.NameFinderME;
@@ -30,22 +31,22 @@ public class MaxentNERRecognizer {
 		nerFinder = new NameFinderME(nerModel, featureGenerator, beamSize);
 	}
 
-	public String recognize(String id, Sentence sentence) {
+	public String recognize(Document doc, Sentence sentence) {
 		String output = "";
 		String[] tokens = sentence.getStringTokens();
 		Span[] spans = nerFinder.find(tokens);
 		for (Span span : spans) {
 			int startOffset = Integer.MAX_VALUE;
 			int endOffset = 0;
-			String entity = "";
 			for (int i = span.getStart(); i < span.getEnd(); i++) {
 				if (sentence.getTokens().get(i).getStartBaseOffset() <= startOffset)
 					startOffset = sentence.getTokens().get(i).getStartBaseOffset();
 				if (sentence.getTokens().get(i).getEndBaseOffset() >= endOffset)
 					endOffset = sentence.getTokens().get(i).getEndBaseOffset();
-				entity += sentence.getTokens().get(i).getContent() + " ";
 			}
-			output += id + "\t" + startOffset + "\t" + endOffset + "\t" + entity.trim() + "\t" + span.getType() + "\n";
+			
+			String entity = doc.getContent().substring(startOffset, endOffset);
+			output += doc.getPmid() + "\t" + startOffset + "\t" + endOffset + "\t" + entity.trim() + "\t" + span.getType() + "\n";
 		}
 		return output;
 	}
