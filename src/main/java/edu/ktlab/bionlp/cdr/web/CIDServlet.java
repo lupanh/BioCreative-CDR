@@ -42,7 +42,7 @@ public class CIDServlet extends HttpServlet {
 					MaxentNERFactoryExample.createFeatureGenerator());
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
 			classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
-			factory = new CollectionFactory(false);
+			factory = new CollectionFactory(true);
 			
 			if (temp.exists())
 				temp.delete();
