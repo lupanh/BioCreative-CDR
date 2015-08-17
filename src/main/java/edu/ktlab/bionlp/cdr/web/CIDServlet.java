@@ -1,17 +1,52 @@
 package edu.ktlab.bionlp.cdr.web;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jersey.repackaged.com.google.common.collect.Lists;
+import edu.ktlab.bionlp.cdr.base.Annotation;
+import edu.ktlab.bionlp.cdr.base.CollectionFactory;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Relation;
+import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
+import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactoryExample;
+import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERRecognizer;
+import edu.ktlab.bionlp.cdr.nlp.rel.CIDRelationClassifier;
+import edu.ktlab.bionlp.cdr.util.FileHelper;
+import edu.stanford.nlp.util.Pair;
+
 public class CIDServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	CDRNERRecognizer nerFinder;
+	File temp = new File("temp/data_services.txt");
+	MentionNormalization normalizer;
+	CIDRelationClassifier classifier;
+	public CIDServlet() {
+		try {
+			nerFinder = new CDRNERRecognizer("models/ner/cdr_full.perc.model",
+					MaxentNERFactoryExample.createFeatureGenerator());
+			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
+			classifier = new CIDRelationClassifier("models/cid.train.model", "models/cid.train.wordlist");
+			
+			if (temp.exists())
+				temp.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,7 +62,6 @@ public class CIDServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameter format ");
 			return;
 		}
-		System.out.println(format);
 
 		int run = 1;
 		String setString = request.getParameter("run");
@@ -53,8 +87,6 @@ public class CIDServlet extends HttpServlet {
 
 		// test format
 		String data = optional.get();
-		System.out.println(data);
-
 		if (!checkFormat(data, format)) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST,
 					String.format("The input text is not in %s format", format));
@@ -111,6 +143,46 @@ public class CIDServlet extends HttpServlet {
 	}
 
 	private String annotate(String data, int run) throws Exception {
+		Document doc = CollectionFactory.loadDocumentFromString(data, false);
+
+		for (Sentence sent : doc.getSentences()) {
+			List<Annotation> anns = nerFinder.recognize(doc, sent, normalizer);
+			for (Annotation ann : anns) {
+				doc.addAnnotation(ann);
+				data += doc.getPmid() + "\t" + ann.getStartBaseOffset() + "\t" + ann.getEndBaseOffset() + "\t"
+						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
+			}				
+		}
+		
+		Set<Relation> candidateRels = doc.getRelationCandidates();
+		Set<Relation> predictRels = new HashSet<Relation>();
+		List<Sentence> sents = doc.getSentences();
+		for (Sentence sent : sents) {
+			for (Relation candidateRel : candidateRels) {
+				if (sent.containRelation(candidateRel)) {					
+					List<Annotation> annsChed = sent.getAnnotation(candidateRel.getChemicalID());
+					List<Annotation> annsDis = sent.getAnnotation(candidateRel.getDiseaseID());
+
+					List<Pair<Annotation, Annotation>> pairs = Lists.newArrayList();
+					for (Annotation annChed : annsChed)
+						for (Annotation annDis : annsDis) {
+							pairs.add(new Pair<Annotation, Annotation>(annChed, annDis));
+						}
+
+					for (Pair<Annotation, Annotation> pair : pairs) {
+						double score = classifier.classify(pair, sent);
+						String predict = classifier.getLabel(score);
+						if (predict.equals("CID"))
+							predictRels.add(candidateRel);
+					}
+				}
+			}
+		}
+		
+		for (Relation rel : predictRels)
+			data += doc.getPmid() + "\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";		
+		
+		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
 	}
 }

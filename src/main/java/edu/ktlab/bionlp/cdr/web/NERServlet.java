@@ -139,9 +139,11 @@ public class NERServlet extends HttpServlet {
 
 		for (Sentence sent : doc.getSentences()) {
 			List<Annotation> anns = nerFinder.recognize(doc, sent, normalizer);
-			for (Annotation ann : anns)
+			for (Annotation ann : anns) {
+				doc.addAnnotation(ann);
 				data += doc.getPmid() + "\t" + ann.getStartBaseOffset() + "\t" + ann.getEndBaseOffset() + "\t"
 						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
+			}				
 		}
 		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;

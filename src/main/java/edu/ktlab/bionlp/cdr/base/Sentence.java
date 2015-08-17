@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.Lists;
+
 public class Sentence {
 	private int startOffset;
 	private int endOffset;
@@ -63,16 +65,26 @@ public class Sentence {
 		return annotations.add(annotation);
 	}
 
+	public List<Annotation> getAnnotation(String reference) {
+		List<Annotation> anns = Lists.newArrayList();
+
+		for (Annotation annotation : annotations)
+			if (annotation.getReference().equals(reference))
+				anns.add(annotation);
+
+		return anns;
+	}
+
 	public List<Token> getTokens() {
 		return tokens;
 	}
-	
+
 	public String[] getStringTokens() {
 		String[] strTokens = new String[tokens.size()];
-		
+
 		for (int i = 0; i < tokens.size(); i++)
 			strTokens[i] = tokens.get(i).getContent();
-		
+
 		return strTokens;
 	}
 

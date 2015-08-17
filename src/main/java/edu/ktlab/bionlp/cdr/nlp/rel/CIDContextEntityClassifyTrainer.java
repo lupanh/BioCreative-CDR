@@ -18,10 +18,10 @@ import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.base.Token;
 import edu.ktlab.bionlp.cdr.nlp.rel.feature.ContextGenerator;
-import edu.ktlab.bionlp.cdr.nlp.rel.feature.DependencyFeatureGenerator;
+import edu.ktlab.bionlp.cdr.nlp.rel.feature.CTXDependencyFeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.rel.feature.FeatureGenerator;
 import edu.ktlab.bionlp.cdr.nlp.rel.feature.FeatureSet;
-import edu.ktlab.bionlp.cdr.nlp.rel.feature.TokenFeatureGenerator;
+import edu.ktlab.bionlp.cdr.nlp.rel.feature.CTXTokenFeatureGenerator;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
 public class CIDContextEntityClassifyTrainer {
@@ -33,13 +33,13 @@ public class CIDContextEntityClassifyTrainer {
 
 	@SuppressWarnings("unchecked")
 	public static FeatureGenerator<Token, Sentence>[] mFeatureGenerators = new FeatureGenerator[] {
-			new DependencyFeatureGenerator(), new TokenFeatureGenerator() };
+			new CTXDependencyFeatureGenerator(), new CTXTokenFeatureGenerator() };
 
-	static ContextGenerator contextGenerator;
+	static ContextGenerator<Token, Sentence> contextGenerator;
 	static FeatureSet featureSet;
 
 	public static void init() throws Exception {
-		contextGenerator = new ContextGenerator(mFeatureGenerators);
+		contextGenerator = new ContextGenerator<Token, Sentence>(mFeatureGenerators);
 		featureSet = new FeatureSet();
 	}
 
