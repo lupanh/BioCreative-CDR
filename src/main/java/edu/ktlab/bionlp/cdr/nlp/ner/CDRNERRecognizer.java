@@ -5,16 +5,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.ktlab.bionlp.cdr.base.Annotation;
-import edu.ktlab.bionlp.cdr.base.Document;
-import edu.ktlab.bionlp.cdr.base.Sentence;
-import edu.ktlab.bionlp.cdr.base.TextSpan;
-import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.util.Span;
 import opennlp.tools.util.featuregen.AdaptiveFeatureGenerator;
+import edu.ktlab.bionlp.cdr.base.Annotation;
+import edu.ktlab.bionlp.cdr.base.Document;
+import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.base.TextSpan;
+import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 
 public class CDRNERRecognizer {
 	AdaptiveFeatureGenerator featureGenerator;
@@ -38,7 +38,6 @@ public class CDRNERRecognizer {
 
 	public List<Annotation> recognize(Document doc, Sentence sentence, MentionNormalization normalizer) {
 		List<Annotation> anns = new ArrayList<Annotation>();
-		String output = "";
 		String[] sentenceTokens = sentence.getStringTokens();
 		Span[] spans = nerFinder.find(sentenceTokens);
 
@@ -62,15 +61,11 @@ public class CDRNERRecognizer {
 			ann.setEndBaseOffset(endOffset);
 			ann.setType(span.getType());
 			
-			// output += doc.getPmid() + "\t" + startOffset + "\t" + endOffset + "\t" + mention.trim() + "\t" + span.getType();
-			
 			String[] mentionTokens = SimpleTokenizer.INSTANCE.tokenize(mention.toLowerCase());
 			if (normalizer != null) {
 				String meshId = normalizer.normalize(mention, mentionTokens);
-				// output += "\t" + meshId;
 				ann.setReference(meshId);
 			}
-			// output += "\n";
 			anns.add(ann);
 		}
 		return anns;

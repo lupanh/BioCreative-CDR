@@ -127,10 +127,8 @@ public class NERServlet extends HttpServlet {
 
 	private boolean checkFormat(String data, String format) {
 		if (format.equals("pubtator")) {
-			// test pubtator format
 			return true;
 		} else if (format.equals("bioc")) {
-			// test bioc format
 			return true;
 		} else {
 			return false;

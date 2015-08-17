@@ -74,10 +74,6 @@ public class PerceptronNERRecognizerExample {
 				}
 				
 				if (predictRels.size() == 0) {
-					/*for (Relation rel : candidateRels) {
-						if (ctdmatcher.match(rel))
-							predictRels.add(rel);
-					}*/
 					if (silver.getDocs().containsKey(doc.getPassages().get(0).getContent().hashCode())) {
 						Set<Relation> ctdRels = silver.getDocs().get(doc.getPassages().get(0).getContent().hashCode()).getRelations();
 						for (Relation rel : candidateRels) {
