@@ -13,6 +13,7 @@ import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.dataset.CTDRelationMatcher;
+import edu.ktlab.bionlp.cdr.dataset.ctd.SilverDataset;
 import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 import edu.ktlab.bionlp.cdr.nlp.rel.CIDRelationClassifier;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
@@ -26,6 +27,8 @@ public class PerceptronNERRecognizerExample {
 		MentionNormalization normalizer = new MentionNormalization("models/nen/cdr_full.txt",
 				"models/nen/mesh2015.gzip");
 		CTDRelationMatcher ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
+		SilverDataset silver = new SilverDataset();
+		silver.loadJsonFile("models/silver.gzip");
 		
 		CollectionFactory factory = new CollectionFactory(true);
 		
@@ -71,10 +74,18 @@ public class PerceptronNERRecognizerExample {
 				}
 				
 				if (predictRels.size() == 0) {
-					for (Relation rel : candidateRels) {
+					/*for (Relation rel : candidateRels) {
 						if (ctdmatcher.match(rel))
 							predictRels.add(rel);
+					}*/
+					if (silver.getDocs().containsKey(doc.getPassages().get(0).getContent().hashCode())) {
+						Set<Relation> ctdRels = silver.getDocs().get(doc.getPassages().get(0).getContent().hashCode()).getRelations();
+						for (Relation rel : candidateRels) {
+							if (ctdRels.contains(rel))
+								predictRels.add(rel);
+						}
 					}
+						
 				}
 
 				for (Relation rel : predictRels)

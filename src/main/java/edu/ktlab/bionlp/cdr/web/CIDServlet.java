@@ -22,6 +22,7 @@ import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.dataset.CTDRelationMatcher;
+import edu.ktlab.bionlp.cdr.dataset.ctd.SilverDataset;
 import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactoryExample;
 import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERRecognizer;
@@ -37,6 +38,7 @@ public class CIDServlet extends HttpServlet {
 	CIDRelationClassifier classifier;
 	CollectionFactory factory;
 	CTDRelationMatcher ctdmatcher;
+	SilverDataset silver;
 
 	public CIDServlet() {
 		try {
@@ -45,6 +47,9 @@ public class CIDServlet extends HttpServlet {
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
 			classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
 			ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
+			silver = new SilverDataset();
+			silver.loadJsonFile("models/silver.gzip");
+
 			factory = new CollectionFactory(true);
 
 			if (temp.exists())
@@ -148,7 +153,7 @@ public class CIDServlet extends HttpServlet {
 		}
 	}
 
-	private String annotate(String data, int run) throws Exception {		
+	private String annotate(String data, int run) throws Exception {
 		Document doc = factory.loadDocumentFromString(data);
 
 		for (Sentence sent : doc.getSentences()) {
@@ -157,15 +162,15 @@ public class CIDServlet extends HttpServlet {
 				doc.addAnnotation(ann);
 				data += doc.getPmid() + "\t" + ann.getStartBaseOffset() + "\t" + ann.getEndBaseOffset() + "\t"
 						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
-			}				
+			}
 		}
-		
+
 		Set<Relation> candidateRels = doc.getRelationCandidates();
 		Set<Relation> predictRels = new HashSet<Relation>();
 		List<Sentence> sents = doc.getSentences();
 		for (Sentence sent : sents) {
 			for (Relation candidateRel : candidateRels) {
-				if (sent.containRelation(candidateRel)) {					
+				if (sent.containRelation(candidateRel)) {
 					List<Annotation> annsChed = sent.getAnnotation(candidateRel.getChemicalID());
 					List<Annotation> annsDis = sent.getAnnotation(candidateRel.getDiseaseID());
 
@@ -184,17 +189,39 @@ public class CIDServlet extends HttpServlet {
 				}
 			}
 		}
-		
+
 		if (predictRels.size() == 0) {
-			for (Relation rel : candidateRels) {
-				if (ctdmatcher.match(rel))
-					predictRels.add(rel);
+			if (run == 1) {
+				for (Relation rel : candidateRels) {
+					if (ctdmatcher.match(rel))
+						predictRels.add(rel);
+				}
+			} else if (run == 2) {
+				if (silver.getDocs().containsKey(doc.getPassages().get(0).getContent().hashCode())) {
+					Set<Relation> ctdRels = silver.getDocs().get(doc.getPassages().get(0).getContent().hashCode())
+							.getRelations();
+					for (Relation rel : candidateRels) {
+						if (ctdRels.contains(rel))
+							predictRels.add(rel);
+					}
+				}
 			}
 		}
-		
+
+		if (run == 3) {
+			if (silver.getDocs().containsKey(doc.getPassages().get(0).getContent().hashCode())) {
+				Set<Relation> ctdRels = silver.getDocs().get(doc.getPassages().get(0).getContent().hashCode())
+						.getRelations();
+				for (Relation rel : candidateRels) {
+					if (ctdRels.contains(rel))
+						predictRels.add(rel);
+				}
+			}
+		}
+
 		for (Relation rel : predictRels)
-			data += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";		
-		
+			data += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";
+
 		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
 	}
