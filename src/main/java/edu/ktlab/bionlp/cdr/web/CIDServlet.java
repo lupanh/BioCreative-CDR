@@ -31,7 +31,7 @@ import edu.stanford.nlp.util.Pair;
 public class CIDServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	CDRNERRecognizer nerFinder;
-	File temp = new File("temp/data_services.txt");
+	File temp = new File("temp/cid_services.txt");
 	MentionNormalization normalizer;
 	CIDRelationClassifier classifier;
 	CollectionFactory factory;

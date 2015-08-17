@@ -25,7 +25,7 @@ import edu.ktlab.bionlp.cdr.util.FileHelper;
 public class NERServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	CDRNERRecognizer nerFinder;
-	File temp = new File("temp/data_services.txt");
+	File temp = new File("temp/ner_services.txt");
 	MentionNormalization normalizer;
 	CollectionFactory factory;
 
