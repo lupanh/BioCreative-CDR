@@ -67,7 +67,7 @@ public class CDRMentionNormalization {
 					if (StringUtils.isAlphanumeric(token))
 						query += token + " ";
 
-				Map<String, String> results = searcher.searchMESH(query.trim(), 11);
+				Map<String, String> results = searcher.searchMESHByName(query.trim(), 11);
 				for (String mesh : results.keySet()) {
 					float score = sim.score(tokens, SimpleTokenizer.INSTANCE.tokenize(mesh.toLowerCase()));
 					if (score > max) {

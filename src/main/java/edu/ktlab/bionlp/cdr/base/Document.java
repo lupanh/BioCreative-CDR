@@ -1,8 +1,10 @@
 package edu.ktlab.bionlp.cdr.base;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
@@ -119,6 +121,17 @@ public class Document {
 			refs.add(rel.getDiseaseID());
 		}
 
+		return refs;
+	}
+	
+	public Map<String, String> getReferencesInTitle() {
+		Map<String, String> refs = new HashMap<String, String>();
+		
+		for (Passage pass : passages)
+			if (pass.getType().equals("title")) {
+				for (Annotation ann : pass.getAnnotations())
+					refs.put(ann.getReference(), ann.getType());
+			}
 		return refs;
 	}
 }

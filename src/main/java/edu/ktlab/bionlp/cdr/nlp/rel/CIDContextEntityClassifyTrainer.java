@@ -108,10 +108,10 @@ public class CIDContextEntityClassifyTrainer {
 		init();
 		createVectorTrainingFile();
 		// Training
-		// new Train().main(new String[] { "-s", "0", fileTraining, fileModel});
+		new Train().main(new String[] { "-s", "3", fileTraining, fileModel});
 
 		// Cross-validation
-		new Train().main(new String[] { "-v", "10", "-s", "2", "-c", "1", fileTraining, fileModel });
+		new Train().main(new String[] { "-v", "10", "-s", "3", "-c", "1", fileTraining, fileModel });
 
 		System.out.println("Processing time: " + (System.currentTimeMillis() - current) + " ms");
 

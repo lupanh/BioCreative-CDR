@@ -91,7 +91,7 @@ public class CIDRelationClassifier {
 	}
 
 	public static void main(String[] args) throws Exception {
-		CIDRelationClassifier classifier = new CIDRelationClassifier("models/cid.train.model", "models/cid.train.wordlist");
+		CIDRelationClassifier classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
 		Collection col = CollectionFactory.loadJsonFile("data/cdr/cdr_dev/cdr_dev.gzip");
 		
 		for (Document doc : col.getDocuments()) {

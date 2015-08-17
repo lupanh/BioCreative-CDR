@@ -51,7 +51,7 @@ public class MentionNormalization {
 
 			Map<String, String> results;
 			try {
-				results = searcher.searchMESH(query.trim(), 11);
+				results = searcher.searchMESHByName(query.trim(), 11);
 				for (String mesh : results.keySet()) {
 					float score = sim.score(tokens, SimpleTokenizer.INSTANCE.tokenize(mesh.toLowerCase()));
 					if (score > max) {

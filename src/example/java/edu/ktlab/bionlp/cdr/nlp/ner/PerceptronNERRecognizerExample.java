@@ -12,6 +12,7 @@ import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.dataset.CTDRelationMatcher;
 import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 import edu.ktlab.bionlp.cdr.nlp.rel.CIDRelationClassifier;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
@@ -24,8 +25,10 @@ public class PerceptronNERRecognizerExample {
 		CIDRelationClassifier classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
 		MentionNormalization normalizer = new MentionNormalization("models/nen/cdr_full.txt",
 				"models/nen/mesh2015.gzip");
+		CTDRelationMatcher ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
+		
 		CollectionFactory factory = new CollectionFactory(true);
-
+		
 		String[] lines = FileHelper.readFileAsLines("temp/test_webservice.txt");
 		String text = "";
 		for (int i = 0; i < lines.length; i++) {
@@ -42,7 +45,6 @@ public class PerceptronNERRecognizerExample {
 					}
 						
 				}
-				
 				Set<Relation> candidateRels = doc.getRelationCandidates();
 				Set<Relation> predictRels = new HashSet<Relation>();
 				List<Sentence> sents = doc.getSentences();
@@ -68,6 +70,13 @@ public class PerceptronNERRecognizerExample {
 					}
 				}
 				
+				if (predictRels.size() == 0) {
+					for (Relation rel : candidateRels) {
+						if (ctdmatcher.match(rel))
+							predictRels.add(rel);
+					}
+				}
+
 				for (Relation rel : predictRels)
 					text += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";	
 				

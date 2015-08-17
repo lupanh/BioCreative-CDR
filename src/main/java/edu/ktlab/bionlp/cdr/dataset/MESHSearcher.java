@@ -11,7 +11,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -47,7 +46,7 @@ public class MESHSearcher {
 		for (String line : lines) {
 			String[] fields = StringUtils.split(line, "\t");
 			Document doc = new Document();
-			doc.add(new StringField("id", fields[0], Field.Store.YES));
+			doc.add(new TextField("id", fields[0], Field.Store.YES));
 
 			String[] tokens = SimpleTokenizer.INSTANCE.tokenize(fields[1]);
 			doc.add(new TextField("name", StringUtils.join(tokens, " "), Field.Store.YES));
@@ -57,7 +56,7 @@ public class MESHSearcher {
 		indexWriter.close();
 	}
 
-	public Map<String, String> searchMESH(String query, int size) throws Exception {
+	public Map<String, String> searchMESHByName(String query, int size) throws Exception {
 		Map<String, String> results = Maps.newHashMap();
 
 		IndexReader reader = DirectoryReader.open(ramDirectory);
@@ -76,4 +75,23 @@ public class MESHSearcher {
 		return results;
 	}
 
+	public Map<String, String> searchMESHById(String id, int size) throws Exception {
+		Map<String, String> results = Maps.newHashMap();
+
+		IndexReader reader = DirectoryReader.open(ramDirectory);
+		IndexSearcher searcher = new IndexSearcher(reader);
+		searcher.setSimilarity(new DefaultSimilarity());
+		Analyzer analyzer2 = new StandardAnalyzer(CharArraySet.EMPTY_SET);
+		QueryParser parser = new QueryParser("id", analyzer2);
+		Query q = parser.parse(id);
+		ScoreDoc[] hits = searcher.search(q, size).scoreDocs;
+		System.out.println(hits.length);
+		for (ScoreDoc hit : hits) {
+			Document doc = searcher.doc(hit.doc);
+			results.put(doc.get("name"), doc.get("id"));
+		}
+		reader.close();
+
+		return results;
+	}
 }

@@ -21,6 +21,7 @@ import edu.ktlab.bionlp.cdr.base.CollectionFactory;
 import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.base.Sentence;
+import edu.ktlab.bionlp.cdr.dataset.CTDRelationMatcher;
 import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
 import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactoryExample;
 import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERRecognizer;
@@ -35,6 +36,7 @@ public class CIDServlet extends HttpServlet {
 	MentionNormalization normalizer;
 	CIDRelationClassifier classifier;
 	CollectionFactory factory;
+	CTDRelationMatcher ctdmatcher;
 
 	public CIDServlet() {
 		try {
@@ -42,8 +44,9 @@ public class CIDServlet extends HttpServlet {
 					MaxentNERFactoryExample.createFeatureGenerator());
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
 			classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
+			ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
 			factory = new CollectionFactory(true);
-			
+
 			if (temp.exists())
 				temp.delete();
 		} catch (Exception e) {
@@ -179,6 +182,13 @@ public class CIDServlet extends HttpServlet {
 							predictRels.add(candidateRel);
 					}
 				}
+			}
+		}
+		
+		if (predictRels.size() == 0) {
+			for (Relation rel : candidateRels) {
+				if (ctdmatcher.match(rel))
+					predictRels.add(rel);
 			}
 		}
 		
