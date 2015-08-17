@@ -24,15 +24,12 @@ import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.dataset.CTDRelationMatcher;
 import edu.ktlab.bionlp.cdr.dataset.ctd.SilverDataset;
 import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
-import edu.ktlab.bionlp.cdr.nlp.ner.MaxentNERFactoryExample;
-import edu.ktlab.bionlp.cdr.nlp.ner.CDRNERRecognizer;
 import edu.ktlab.bionlp.cdr.nlp.rel.CIDRelationClassifier;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 import edu.stanford.nlp.util.Pair;
 
 public class CIDServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	CDRNERRecognizer nerFinder;
 	File temp = new File("temp/cid_services.txt");
 	MentionNormalization normalizer;
 	CIDRelationClassifier classifier;
@@ -41,9 +38,7 @@ public class CIDServlet extends HttpServlet {
 	SilverDataset silver;
 
 	public CIDServlet() {
-		try {
-			nerFinder = new CDRNERRecognizer("models/ner/cdr_full.perc.model",
-					MaxentNERFactoryExample.createFeatureGenerator());
+		try {			
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
 			classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
 			ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
@@ -154,16 +149,7 @@ public class CIDServlet extends HttpServlet {
 	}
 
 	private String annotate(String data, int run) throws Exception {
-		Document doc = factory.loadDocumentFromString(data);
-
-		for (Sentence sent : doc.getSentences()) {
-			List<Annotation> anns = nerFinder.recognize(doc, sent, normalizer);
-			for (Annotation ann : anns) {
-				doc.addAnnotation(ann);
-				data += doc.getPmid() + "\t" + ann.getStartBaseOffset() + "\t" + ann.getEndBaseOffset() + "\t"
-						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
-			}
-		}
+		Document doc = factory.loadDocumentFromString(data);		
 
 		Set<Relation> candidateRels = doc.getRelationCandidates();
 		Set<Relation> predictRels = new HashSet<Relation>();
