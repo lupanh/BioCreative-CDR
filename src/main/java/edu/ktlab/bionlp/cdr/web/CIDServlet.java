@@ -180,7 +180,7 @@ public class CIDServlet extends HttpServlet {
 		}
 		
 		for (Relation rel : predictRels)
-			data += doc.getPmid() + "\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";		
+			data += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";		
 		
 		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
