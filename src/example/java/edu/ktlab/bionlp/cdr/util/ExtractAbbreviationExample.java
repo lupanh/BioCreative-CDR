@@ -7,7 +7,9 @@ import edu.ktlab.bionlp.cdr.base.Document;
 public class ExtractAbbreviationExample {
 
 	public static void main(String[] args) {
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_dev/cdr_dev.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile("data/cdr/cdr_dev/cdr_dev.txt");
+		
 		for (Document doc : col.getDocuments())
 			System.out.println(doc.getPmid() + " " + doc.getAbbreviations());
 	}

@@ -14,7 +14,8 @@ public class MentionNormalizationExample {
 	public static void main(String[] args) throws Exception {
 		MentionNormalization normalizer = new MentionNormalization("data/cdr/cdr_train/cdr_train.txt",
 				"models/nen/mesh2015.gzip");
-		Collection colTest = CollectionFactory.loadFile("data/cdr/cdr_dev/cdr_dev.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection colTest = factory.loadFile("data/cdr/cdr_dev/cdr_dev.txt");
 
 		for (Document doc : colTest.getDocuments()) {
 			Set<AbbreviationPair> abbrs = doc.getAbbreviations();

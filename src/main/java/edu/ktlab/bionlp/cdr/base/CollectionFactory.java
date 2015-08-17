@@ -27,7 +27,14 @@ public class CollectionFactory {
 	static SentSplitterMESingleton splitter = SentSplitterMESingleton.getInstance();
 	static SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
 	static LexicalizedParser parser = null;
-
+	boolean isParser = false;
+	
+	public CollectionFactory(boolean isParser) {
+		this.isParser = isParser;
+		if (isParser)
+			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
+	}
+	
 	public static Collection loadJsonFile(String file) throws Exception {
 		JsonReader reader;
 		if (file.endsWith(".gzip"))
@@ -50,10 +57,7 @@ public class CollectionFactory {
 		writer.close();
 	}
 
-	public static Collection loadFile(String file, boolean isParser) {
-		if (isParser)
-			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
-
+	public Collection loadFile(String file) {
 		Collection collection = new Collection();
 		String[] lines = FileHelper.readFileAsLines(file);
 		Document doc = new Document();
@@ -119,10 +123,7 @@ public class CollectionFactory {
 		return collection;
 	}
 
-	public static Document loadDocumentFromString(String text, boolean isParser) {
-		if (isParser)
-			parser = LexicalizedParser.getParserFromFile(DefaultPaths.DEFAULT_PARSER_MODEL, new Options());
-
+	public Document loadDocumentFromString(String text) {
 		Document doc = new Document();
 		int offset = 0;
 		String[] lines = text.split("\n");

@@ -12,8 +12,8 @@ public class GenerateOpenNLPFormat {
 	
 	public static String generateOpenNLPFormat(String pubFile) {
 		String output = "";
-		
-		Collection col = CollectionFactory.loadFile(pubFile, false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile(pubFile);
 		
 		for (Sentence sent : col.getSentences())
 			output += sent.getTokenized2OpenNLPFormat() + "\n";

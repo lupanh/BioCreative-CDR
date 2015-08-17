@@ -10,8 +10,9 @@ import edu.ktlab.bionlp.cdr.base.Relation;
 
 public class RelationOverlapChecker {
 	public static void main(String... strings) {
-		Collection colDev = CollectionFactory.loadFile("data/cdr/cdr_dev/CDR_DevelopmentSet.txt", false);
-		Collection colTrain = CollectionFactory.loadFile("data/cdr/cdr_train/CDR_TrainingSet.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection colDev = factory.loadFile("data/cdr/cdr_dev/CDR_DevelopmentSet.txt");
+		Collection colTrain = factory.loadFile("data/cdr/cdr_train/CDR_TrainingSet.txt");
 		int countOverlap = 0;
 		Set<Relation> uniqueRels = Sets.newHashSet();
 		for (Relation rel : colDev.getRelations()) {

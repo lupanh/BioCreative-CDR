@@ -27,12 +27,15 @@ public class NERServlet extends HttpServlet {
 	CDRNERRecognizer nerFinder;
 	File temp = new File("temp/data_services.txt");
 	MentionNormalization normalizer;
+	CollectionFactory factory;
 
 	public NERServlet() {
 		try {
 			nerFinder = new CDRNERRecognizer("models/ner/cdr_full.perc.model",
 					MaxentNERFactoryExample.createFeatureGenerator());
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
+			factory = new CollectionFactory(false);
+
 			if (temp.exists())
 				temp.delete();
 		} catch (Exception e) {
@@ -135,7 +138,7 @@ public class NERServlet extends HttpServlet {
 	}
 
 	private String annotate(String data, int run) throws Exception {
-		Document doc = CollectionFactory.loadDocumentFromString(data, false);
+		Document doc = factory.loadDocumentFromString(data);
 
 		for (Sentence sent : doc.getSentences()) {
 			List<Annotation> anns = nerFinder.recognize(doc, sent, normalizer);
@@ -143,7 +146,7 @@ public class NERServlet extends HttpServlet {
 				doc.addAnnotation(ann);
 				data += doc.getPmid() + "\t" + ann.getStartBaseOffset() + "\t" + ann.getEndBaseOffset() + "\t"
 						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
-			}				
+			}
 		}
 		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;

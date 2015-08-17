@@ -35,8 +35,9 @@ public class CDRMentionNormalization {
 		PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new CosineWordSimilarity(), true);
 		// PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new
 		// W2VWordSimilarity("data/embedding/glove.txt"), false);
-		Collection colTrain = CollectionFactory.loadFile(trainFile, false);		
-		Collection colTest = CollectionFactory.loadFile(testFile, false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection colTrain = factory.loadFile(trainFile);
+		Collection colTest = factory.loadFile(testFile);
 		
 		Map<String, String> memoryLinked = new HashMap<String, String>();
 		for (Annotation ann : colTrain.getAnnotations()) {

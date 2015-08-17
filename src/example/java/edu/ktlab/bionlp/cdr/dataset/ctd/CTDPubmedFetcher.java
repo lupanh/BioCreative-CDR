@@ -38,7 +38,8 @@ public class CTDPubmedFetcher {
 			FileHelper.writeToFile(doc.html(), new File("data/ctd_pubmed2/" + id + ".html"), Charset.forName("UTF-8"));
 		}
 		*/
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_full/CDR_FullSet.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile("data/cdr/cdr_full/cdr_full.txt");
 
 		for (edu.ktlab.bionlp.cdr.base.Document doc : col.getDocuments()) {
 			String url = "http://ctdbase.org/detail.go?6578706f7274=1&d-1332398-e=3&view=disease&type=reference&acc="

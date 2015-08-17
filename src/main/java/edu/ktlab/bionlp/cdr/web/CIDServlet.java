@@ -34,12 +34,15 @@ public class CIDServlet extends HttpServlet {
 	File temp = new File("temp/data_services.txt");
 	MentionNormalization normalizer;
 	CIDRelationClassifier classifier;
+	CollectionFactory factory;
+
 	public CIDServlet() {
 		try {
 			nerFinder = new CDRNERRecognizer("models/ner/cdr_full.perc.model",
 					MaxentNERFactoryExample.createFeatureGenerator());
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
-			classifier = new CIDRelationClassifier("models/cid.train.model", "models/cid.train.wordlist");
+			classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
+			factory = new CollectionFactory(false);
 			
 			if (temp.exists())
 				temp.delete();
@@ -142,8 +145,8 @@ public class CIDServlet extends HttpServlet {
 		}
 	}
 
-	private String annotate(String data, int run) throws Exception {
-		Document doc = CollectionFactory.loadDocumentFromString(data, false);
+	private String annotate(String data, int run) throws Exception {		
+		Document doc = factory.loadDocumentFromString(data);
 
 		for (Sentence sent : doc.getSentences()) {
 			List<Annotation> anns = nerFinder.recognize(doc, sent, normalizer);

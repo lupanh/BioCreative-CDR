@@ -14,9 +14,10 @@ import edu.ktlab.bionlp.cdr.base.Sentence;
 public class CDRContextMentionExample {
 
 	public static void main(String[] args) throws Exception {
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_test.txt", false);
-
-		for (Document doc : col.getDocuments()) {
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection colTest = factory.loadFile("data/cdr/cdr_test.txt");
+		
+		for (Document doc : colTest.getDocuments()) {
 			System.out.println(doc.getPmid());
 			Set<String> refs = doc.getRelationReferences();
 			List<Sentence> sents = doc.getSentences();

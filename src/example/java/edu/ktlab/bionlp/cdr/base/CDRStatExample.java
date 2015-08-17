@@ -11,7 +11,8 @@ import edu.ktlab.bionlp.cdr.base.Sentence;
 public class CDRStatExample {
 
 	public static void main(String[] args) {
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_train/cdr_train.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile("data/cdr/cdr_train/cdr_train.txt");
 
 		System.out.println(col.getSentences().size());
 		System.out.println(col.getAnnotations().size());

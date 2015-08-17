@@ -25,8 +25,9 @@ public class RelationPredictByCTDExample {
 
 		List<String> truePositive = new ArrayList<String>();
 		int countPredict = 0;
-
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_train/CDR_TrainingSet.txt", false);
+		
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile("data/cdr/cdr_train/CDR_TrainingSet.txt");
 		// Collection col = new Collection("data/cdr/cdr_dev/CDR_DevelopmentSet.txt", false);
 
 		for (Document doc : col.getDocuments()) {

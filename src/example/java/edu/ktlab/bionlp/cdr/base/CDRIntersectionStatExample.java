@@ -12,8 +12,10 @@ import edu.ktlab.bionlp.cdr.base.Token;
 public class CDRIntersectionStatExample {
 
 	public static void main(String[] args) {
-		Collection colTrain = CollectionFactory.loadFile("data/cdr/cdr_train/CDR_TrainingSet.txt", false);
-		Collection colDev = CollectionFactory.loadFile("data/cdr/cdr_dev/CDR_DevelopmentSet.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+
+		Collection colTrain = factory.loadFile("data/cdr/cdr_train/CDR_TrainingSet.txt");
+		Collection colDev = factory.loadFile("data/cdr/cdr_dev/CDR_DevelopmentSet.txt");
 
 		Set<String> uniqueTokens = new HashSet<String>();
 		int interToken = 0;

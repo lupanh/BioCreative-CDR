@@ -16,7 +16,9 @@ public class DiseaseMeshExample {
 			String[] fields = line.split("\t");
 			disease_mesh.put(fields[0].toLowerCase(), fields[1]);
 		}
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_training/CDR_TrainingSet.txt", false);
+		
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile("data/cdr/cdr_train/cdr_train.txt");
 		int total = 0;
 		int count = 0;
 		for (Annotation ann : col.getAnnotations()) {

@@ -10,7 +10,8 @@ import edu.ktlab.bionlp.cdr.base.Sentence;
 public class Sentence2OpenNLPFormatExample {
 
 	public static void main(String[] args) {
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_test.txt", false);
+		CollectionFactory factory = new CollectionFactory(false);
+		Collection col = factory.loadFile("data/cdr/cdr_train/cdr_train.txt");
 		for (Document doc : col.getDocuments()) {
 			List<Sentence> sents = doc.getSentences();
 			for (Sentence sent : sents) {

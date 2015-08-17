@@ -19,6 +19,7 @@ public class MentionNormalization {
 	PhraseSimilarity sim = new WeightCosinePhraseSimilarity(new CosineWordSimilarity(), true);
 	Map<String, String> memoryLinked = new HashMap<String, String>();
 	MESHSearcher searcher = new MESHSearcher();
+	CollectionFactory factory = new CollectionFactory(false);
 
 	public MentionNormalization(String trainFile, String meshFile) {
 		try {
@@ -28,20 +29,20 @@ public class MentionNormalization {
 			e.printStackTrace();
 		}
 	}
-	
+
 	void loadMemoryLinked(String trainFile) {
-		Collection colTrain = CollectionFactory.loadFile(trainFile, false);		
+		Collection colTrain = factory.loadFile(trainFile);
 		for (Annotation ann : colTrain.getAnnotations()) {
 			memoryLinked.put(ann.getContent().toLowerCase(), ann.getReference());
 		}
 	}
-	
+
 	public String normalize(String mention, String[] tokens) {
 		String meshId = "-1";
-		
+
 		if (memoryLinked.containsKey(mention.toLowerCase())) {
 			meshId = memoryLinked.get(mention.toLowerCase());
-		} else {	
+		} else {
 			float max = 0.01f;
 			String query = "";
 			for (String token : tokens)
@@ -60,9 +61,9 @@ public class MentionNormalization {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-			}				
+			}
 		}
-		
+
 		return meshId;
 	}
 }

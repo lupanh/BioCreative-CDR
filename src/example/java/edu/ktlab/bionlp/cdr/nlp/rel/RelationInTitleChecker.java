@@ -9,8 +9,10 @@ import edu.ktlab.bionlp.cdr.base.Sentence;
 
 public class RelationInTitleChecker {
 	public static void main(String... strings) {
+		CollectionFactory factory = new CollectionFactory(false);
+
 		// Collection col = CollectionLoader.loadFromFile("data/cdr/cdr_dev/cdr_dev.txt", false);
-		Collection col = CollectionFactory.loadFile("data/cdr/cdr_train/cdr_train.txt", false);
+		Collection col = factory.loadFile("data/cdr/cdr_train/cdr_train.txt");
 		
 		for (Document doc : col.getDocuments()) {
 			System.out.println(doc.getPmid());
