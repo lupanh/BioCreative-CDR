@@ -218,7 +218,8 @@ public class CIDServlet extends HttpServlet {
 		}
 
 		for (Relation rel : predictRels)
-			data += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";
+			if (!rel.getChemicalID().equals("-1") && !rel.getDiseaseID().equals("-1"))
+				data += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";
 
 		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
