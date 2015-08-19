@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -15,6 +16,7 @@ import edu.ktlab.bionlp.cdr.base.Document;
 import edu.ktlab.bionlp.cdr.base.Sentence;
 import edu.ktlab.bionlp.cdr.base.TextSpan;
 import edu.ktlab.bionlp.cdr.nlp.nen.MentionNormalization;
+import edu.ktlab.bionlp.cdr.util.ExtractAbbreviation.AbbreviationPair;
 
 public class CDRNERRecognizer {
 	AdaptiveFeatureGenerator featureGenerator;
@@ -40,7 +42,8 @@ public class CDRNERRecognizer {
 		List<Annotation> anns = new ArrayList<Annotation>();
 		String[] sentenceTokens = sentence.getStringTokens();
 		Span[] spans = nerFinder.find(sentenceTokens);
-
+		Set<AbbreviationPair> abbrs = doc.getAbbreviations();
+		
 		for (Span span : spans) {
 			Annotation ann = new Annotation();
 			
@@ -60,6 +63,11 @@ public class CDRNERRecognizer {
 			ann.setStartBaseOffset(startOffset);
 			ann.setEndBaseOffset(endOffset);
 			ann.setType(span.getType());
+			
+			for (AbbreviationPair abbr : abbrs) {
+				if (abbr.getShortForm().equals(ann.getContent()))
+					mention = abbr.getLongForm();
+			}
 			
 			String[] mentionTokens = SimpleTokenizer.INSTANCE.tokenize(mention.toLowerCase());
 			if (normalizer != null) {
