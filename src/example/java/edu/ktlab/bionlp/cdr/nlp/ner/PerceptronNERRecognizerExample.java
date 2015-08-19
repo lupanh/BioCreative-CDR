@@ -95,8 +95,8 @@ public class PerceptronNERRecognizerExample {
 					if (!rel.getChemicalID().equals("-1") && !rel.getDiseaseID().equals("-1"))
 						text += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";
 				
-				if (predictRels.size() == 0)
-					FileHelper.appendToFile(text, new File("temp/test_outservice.txt"), Charset.defaultCharset());
+				// if (predictRels.size() == 0)
+					FileHelper.appendToFile(text + "\n", new File("temp/run3.txt"), Charset.defaultCharset());
 
 				text = "";
 			}

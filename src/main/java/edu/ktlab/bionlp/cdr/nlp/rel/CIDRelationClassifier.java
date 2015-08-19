@@ -87,7 +87,11 @@ public class CIDRelationClassifier {
 	}
 
 	public String getLabel(double score) {
-		return featureSet.getLabels().get((int) score);
+		try {
+			return featureSet.getLabels().get((int) score);	
+		} catch (Exception e) {
+			return "NONE";
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
