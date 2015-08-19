@@ -37,7 +37,11 @@ public class DependencyHelper {
 	}
 
 	public static SemanticGraph convertSemanticGraph(String dtree) {
-		return SemanticGraphFactory.makeFromTree(convertTree(dtree));
+		try {
+			return SemanticGraphFactory.makeFromTree(convertTree(dtree));	
+		} catch (Exception e) {
+			return null;
+		}		
 	}
 
 	public static List<String> transform(String[] tokens) {

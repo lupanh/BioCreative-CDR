@@ -17,7 +17,9 @@ public class CIDDependencyFeatureGenerator implements FeatureGenerator<Pair<Anno
 	public ArrayList<String> extractFeatures(Pair<Annotation, Annotation> pair, Sentence sentence) {
 		ArrayList<String> featureCollector = new ArrayList<String>();
 		SemanticGraph semgraph = DependencyHelper.convertSemanticGraph(sentence.getDeptree());
-
+		if (semgraph == null)
+			return featureCollector;
+		
 		Annotation annChed = pair.first;
 		Annotation annDis = pair.second;
 		featureCollector.add("CD:RF:" + annChed.getReference());
