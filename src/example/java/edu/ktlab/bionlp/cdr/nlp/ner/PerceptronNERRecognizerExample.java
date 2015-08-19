@@ -87,7 +87,7 @@ public class PerceptronNERRecognizerExample {
 
 				for (Relation rel : candidateRels) {
 					List<Relation> rs = trickmatcher.find(rel);
-					if (rs.size() == 0)
+					if (rs.size() != 0)
 						predictRels.addAll(rs);
 				}
 
