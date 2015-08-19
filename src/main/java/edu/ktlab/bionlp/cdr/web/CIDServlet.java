@@ -38,6 +38,7 @@ public class CIDServlet extends HttpServlet {
 	CIDRelationClassifier classifier;
 	CollectionFactory factory;
 	CTDRelationMatcher ctdmatcher;
+	CTDRelationMatcher trickmatcher;
 	SilverDataset silver;
 
 	public CIDServlet() {
@@ -47,6 +48,7 @@ public class CIDServlet extends HttpServlet {
 			normalizer = new MentionNormalization("models/nen/cdr_full.txt", "models/nen/mesh2015.gzip");
 			classifier = new CIDRelationClassifier("models/cid.full.model", "models/cid.full.wordlist");
 			ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
+			trickmatcher = new CTDRelationMatcher("models/trick_relations.txt");
 			silver = new SilverDataset();
 			silver.loadJsonFile("models/silver.gzip");
 
@@ -188,6 +190,12 @@ public class CIDServlet extends HttpServlet {
 					}
 				}
 			}
+		}
+
+		for (Relation rel : candidateRels) {
+			List<Relation> rs = trickmatcher.find(rel);
+			if (rs.size() == 0)
+				predictRels.addAll(rs);
 		}
 
 		if (predictRels.size() == 0) {

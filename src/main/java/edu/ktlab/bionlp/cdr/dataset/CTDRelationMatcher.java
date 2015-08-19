@@ -1,8 +1,10 @@
 package edu.ktlab.bionlp.cdr.dataset;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import jersey.repackaged.com.google.common.collect.Lists;
 import edu.ktlab.bionlp.cdr.base.Relation;
 import edu.ktlab.bionlp.cdr.util.FileHelper;
 
@@ -12,8 +14,8 @@ public class CTDRelationMatcher {
 	public CTDRelationMatcher(String file) {
 		loadRelations(file);
 	}
-	
-	private void loadRelations(String file) {	
+
+	private void loadRelations(String file) {
 		String[] lines = FileHelper.readFileAsLines(file);
 		for (String line : lines) {
 			String[] refs = line.split(" ");
@@ -21,13 +23,18 @@ public class CTDRelationMatcher {
 			relations.add(rel);
 		}
 	}
+
+	public List<Relation> find(Relation rel) {
+		List<Relation> rels = Lists.newArrayList();
+		for (Relation relation : relations)
+			if (rel.getChemicalID().contains(relation.getChemicalID())
+					&& rel.getDiseaseID().contains(relation.getDiseaseID()))
+				rels.add(relation);
+		return rels;
+	}
 	
 	public boolean match(Relation rel) {
 		return relations.contains(rel);
-	}
-	
-	public static void main(String[] args) {
-
 	}
 
 }

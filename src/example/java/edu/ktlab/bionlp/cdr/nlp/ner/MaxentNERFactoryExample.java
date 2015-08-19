@@ -34,6 +34,6 @@ public class MaxentNERFactoryExample {
 		CDRNERFactory ner = new CDRNERFactory(createFeatureGenerator());
 		//ner.trainNER("data/cdr/cdr_train/cdr_train.opennlp", "models/ner/cdr_train.perc.model", TrainUtil.PERCEPTRON_VALUE, 100, 1);
 		ner.trainNER("data/cdr/cdr_full/cdr_full.opennlp", "models/ner/cdr_full.perc.model", TrainUtil.PERCEPTRON_VALUE, 100, 1);
-		ner.evaluatebyExactMatching("data/cdr/cdr_dev/cdr_dev.opennlp", "models/ner/cdr_full.perc.model", 5);
+		// ner.evaluatebyExactMatching("data/cdr/cdr_dev/cdr_dev.opennlp", "models/ner/cdr_full.perc.model", 5);
 	}
 }

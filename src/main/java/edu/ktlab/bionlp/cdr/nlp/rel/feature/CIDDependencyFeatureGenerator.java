@@ -53,10 +53,14 @@ public class CIDDependencyFeatureGenerator implements FeatureGenerator<Pair<Anno
 		ArrayList<String> featureCollector = new ArrayList<String>();
 
 		List<SemanticGraphEdge> shortestPathEdges = semgraph.getShortestUndirectedPathEdges(tokenChed, tokenDis);
-		featureCollector.add("SPE:LEN:" + shortestPathEdges.size());
 
+		if (shortestPathEdges == null)
+			return featureCollector;
+		
 		if (shortestPathEdges.size() == 0)
 			return featureCollector;
+		
+		featureCollector.add("SPE:LEN:" + shortestPathEdges.size());
 
 		ArrayList<String> fullSPSequence = new ArrayList<String>();
 		ArrayList<String> wordSPSequence = new ArrayList<String>();
