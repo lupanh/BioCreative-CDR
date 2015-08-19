@@ -29,7 +29,7 @@ public class PerceptronNERRecognizerExample {
 				"models/nen/mesh2015.gzip");
 		CTDRelationMatcher ctdmatcher = new CTDRelationMatcher("models/ctd_relations_m.txt");
 		CTDRelationMatcher trickmatcher = new CTDRelationMatcher("models/trick_relations.txt");
-		
+
 		SilverDataset silver = new SilverDataset();
 		silver.loadJsonFile("models/silver.gzip");
 
@@ -76,17 +76,15 @@ public class PerceptronNERRecognizerExample {
 					}
 				}
 
-				if (predictRels.size() == 0) {
-					if (silver.getDocs().containsKey(doc.getPassages().get(0).getContent().hashCode())) {
-						Set<Relation> ctdRels = silver.getDocs().get(doc.getPassages().get(0).getContent().hashCode())
-								.getRelations();
-						for (Relation rel : candidateRels) {
-							if (ctdRels.contains(rel))
-								predictRels.add(rel);
-						}
+				if (silver.getDocs().containsKey(doc.getPassages().get(0).getContent().hashCode())) {
+					Set<Relation> ctdRels = silver.getDocs().get(doc.getPassages().get(0).getContent().hashCode())
+							.getRelations();
+					for (Relation rel : candidateRels) {
+						if (ctdRels.contains(rel))
+							predictRels.add(rel);
 					}
 				}
-				
+
 				for (Relation rel : candidateRels) {
 					List<Relation> rs = trickmatcher.find(rel);
 					if (rs.size() == 0)
@@ -96,8 +94,9 @@ public class PerceptronNERRecognizerExample {
 				for (Relation rel : predictRels)
 					if (!rel.getChemicalID().equals("-1") && !rel.getDiseaseID().equals("-1"))
 						text += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";
-
-				FileHelper.appendToFile(text, new File("temp/test_outservice.txt"), Charset.defaultCharset());
+				
+				if (predictRels.size() == 0)
+					FileHelper.appendToFile(text, new File("temp/test_outservice.txt"), Charset.defaultCharset());
 
 				text = "";
 			}
