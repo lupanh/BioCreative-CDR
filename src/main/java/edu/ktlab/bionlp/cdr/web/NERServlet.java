@@ -95,6 +95,7 @@ public class NERServlet extends HttpServlet {
 			out.flush();
 			out.close();
 			response.setStatus(HttpServletResponse.SC_OK);
+			FileHelper.appendToFile("Run " + run + "\n" + result, temp, Charset.forName("UTF-8"));
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error");
 		}
@@ -146,7 +147,6 @@ public class NERServlet extends HttpServlet {
 						+ ann.getContent() + "\t" + ann.getType() + "\t" + ann.getReference() + "\n";
 			}
 		}
-		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
 	}
 }

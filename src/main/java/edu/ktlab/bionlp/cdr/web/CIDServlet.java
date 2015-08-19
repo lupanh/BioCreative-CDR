@@ -111,7 +111,9 @@ public class CIDServlet extends HttpServlet {
 			out.flush();
 			out.close();
 			response.setStatus(HttpServletResponse.SC_OK);
+			FileHelper.appendToFile("Run " + run + "\n" + result, temp, Charset.forName("UTF-8"));
 		} catch (Exception e) {
+			FileHelper.appendToFile("Run " + run + " fail\n", temp, Charset.forName("UTF-8"));
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error");
 		}
 	}
@@ -221,7 +223,6 @@ public class CIDServlet extends HttpServlet {
 			if (!rel.getChemicalID().equals("-1") && !rel.getDiseaseID().equals("-1"))
 				data += doc.getPmid() + "\tCID\t" + rel.getChemicalID() + "\t" + rel.getDiseaseID() + "\n";
 
-		FileHelper.appendToFile(data, temp, Charset.forName("UTF-8"));
 		return data;
 	}
 }
